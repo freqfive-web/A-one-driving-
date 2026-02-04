@@ -34,7 +34,6 @@
       overflow-x:hidden;
     }
 
-    /* Top bar */
     header{
       padding:18px 18px;
       position:sticky;
@@ -166,12 +165,6 @@
       border:1px solid rgba(255,255,255,.12);
     }
     .btnGhost:hover{background:rgba(255,255,255,.10);}
-    .btnDanger{
-      background:rgba(255,77,77,.12);
-      border:1px solid rgba(255,77,77,.25);
-      color:#ffbdbd;
-    }
-    .btnDanger:hover{background:rgba(255,77,77,.18);}
 
     /* Cards */
     .cards{
@@ -219,7 +212,7 @@
       z-index:3;
     }
 
-    /* General feature block */
+    /* General blocks */
     .section{
       margin-top:28px;
       display:grid;
@@ -236,7 +229,7 @@
     .feature h4{font-size:16px;margin-bottom:6px;}
     .feature p{color:var(--muted);font-size:14px;line-height:1.6;}
 
-    /* Slider */
+    /* Right slider */
     .scene{
       border:1px solid rgba(255,255,255,.12);
       background:rgba(255,255,255,.06);
@@ -390,7 +383,7 @@
       100%{transform:translateY(0);opacity:1;}
     }
 
-    /* Slot availability like BookMyShow */
+    /* Slot booking */
     .slotWrap{
       border-radius:20px;
       border:1px solid rgba(255,255,255,.12);
@@ -443,7 +436,7 @@
 
     .seatGrid{
       display:grid;
-      grid-template-columns:repeat(5,1fr);
+      grid-template-columns:repeat(4,1fr);
       gap:8px;
       margin-top:10px;
     }
@@ -719,6 +712,9 @@
       <div class="slotFooter">
         <div>
           <b>Selected:</b> <span id="selectedInfo">None</span>
+          <div style="margin-top:4px;">
+            <b>Your Booking:</b> <span id="myBookingInfo">Not booked</span>
+          </div>
         </div>
         <div>
           <span class="pill green">Available</span>
@@ -797,7 +793,7 @@
   </footer>
 </main>
 
-<!-- Floating WhatsApp Button -->
+<!-- Floating WhatsApp -->
 <a href="https://wa.me/917008186187" target="_blank" class="waFloat" aria-label="WhatsApp">
   💬
 </a>
@@ -842,14 +838,13 @@
 
 <script>
   // ==========================
-  // Unique Visitor ID System
+  // Unique Visitor ID
   // ==========================
   function generateVisitorId() {
     const random = Math.random().toString(16).slice(2, 10).toUpperCase();
     const year = new Date().getFullYear();
     return `ABO-${year}-${random}`;
   }
-
   function getOrCreateVisitorId() {
     let vid = localStorage.getItem("ABO_VISITOR_ID");
     if (!vid) {
@@ -859,7 +854,6 @@
     }
     return vid;
   }
-
   function copyVisitorId(){
     const vid = localStorage.getItem("ABO_VISITOR_ID") || "";
     navigator.clipboard.writeText(vid);
@@ -867,7 +861,7 @@
   }
 
   // ==========================
-  // Scroll functions
+  // Scroll
   // ==========================
   function scrollToPricing(){ document.getElementById("pricing").scrollIntoView({behavior:"smooth"}); }
   function scrollToContact(){ document.getElementById("contact").scrollIntoView({behavior:"smooth"}); }
@@ -914,19 +908,17 @@
     const slides = document.querySelectorAll("#carSlider .slide");
     goToSlide((currentSlide + 1) % slides.length);
   }
-
   function prevSlide(){
     const slides = document.querySelectorAll("#carSlider .slide");
     goToSlide((currentSlide - 1 + slides.length) % slides.length);
   }
 
   // ==========================
-  // Batch animation on scroll
+  // Batch animation
   // ==========================
   function revealBatches(){
     const items = document.querySelectorAll(".animateBatch");
     const trigger = window.innerHeight * 0.86;
-
     items.forEach(el=>{
       const top = el.getBoundingClientRect().top;
       if(top < trigger) el.classList.add("show");
@@ -934,18 +926,16 @@
   }
 
   // ==========================
-  // Blur privacy toggle
+  // Blur toggle
   // ==========================
   let blurEnabled = true;
   function toggleBlur(){
     blurEnabled = !blurEnabled;
     const cards = document.querySelectorAll(".studentCard");
-
     cards.forEach(card=>{
       if(blurEnabled) card.classList.add("blurOn");
       else card.classList.remove("blurOn");
     });
-
     document.getElementById("blurBtn").innerText = "Blur: " + (blurEnabled ? "ON" : "OFF");
   }
 
@@ -967,7 +957,6 @@
 
   function submitAdmission(e){
     e.preventDefault();
-
     const name = document.getElementById("sName").value.trim();
     const phone = document.getElementById("sPhone").value.trim();
     const classType = document.getElementById("sClass").value;
@@ -992,12 +981,29 @@
   }
 
   // ==========================
-  // Slot availability (BookMyShow style)
+  // Visitor booking lock
+  // ==========================
+  function visitorBookingKey(){
+    return "ABO_VISITOR_BOOKING";
+  }
+  function getVisitorBooking(){
+    const raw = localStorage.getItem(visitorBookingKey());
+    return raw ? JSON.parse(raw) : null;
+  }
+  function setVisitorBooking(data){
+    localStorage.setItem(visitorBookingKey(), JSON.stringify(data));
+  }
+  function clearVisitorBooking(){
+    localStorage.removeItem(visitorBookingKey());
+  }
+
+  // ==========================
+  // Slot booking (4 seats per slot)
   // ==========================
   const SLOT_DATA = [
-    { id:"M7_8",  label:"Morning 7–8",  time:"7:00 AM – 8:00 AM", total:10 },
-    { id:"M8_9",  label:"Morning 8–9",  time:"8:00 AM – 9:00 AM", total:10 },
-    { id:"E3_4",  label:"Evening 3–4",  time:"3:00 PM – 4:00 PM", total:10 }
+    { id:"M7_8", label:"Morning 7–8", time:"7:00 AM – 8:00 AM", total:4 },
+    { id:"M8_9", label:"Morning 8–9", time:"8:00 AM – 9:00 AM", total:4 },
+    { id:"E3_4", label:"Evening 3–4", time:"3:00 PM – 4:00 PM", total:4 }
   ];
 
   let selectedSlot = null;
@@ -1006,101 +1012,12 @@
   function bookingKey(slotId){
     return `ABO_BOOKED_${slotId}`;
   }
-
   function loadBookedSeats(slotId){
     const raw = localStorage.getItem(bookingKey(slotId));
     return raw ? JSON.parse(raw) : [];
   }
-
   function saveBookedSeats(slotId, booked){
     localStorage.setItem(bookingKey(slotId), JSON.stringify(booked));
-  }
-
-  function renderSlots(){
-    const grid = document.getElementById("slotGrid");
-    grid.innerHTML = "";
-
-    SLOT_DATA.forEach(slot=>{
-      const booked = loadBookedSeats(slot.id);
-      const availableCount = slot.total - booked.length;
-
-      const availabilityPill = availableCount === 0
-        ? `<span class="pill red">Houseful</span>`
-        : `<span class="pill green">${availableCount} Seats</span>`;
-
-      const card = document.createElement("div");
-      card.className = "slotCard";
-
-      let seatsHTML = "";
-      for(let i=1;i<=slot.total;i++){
-        const isBooked = booked.includes(i);
-        seatsHTML += `
-          <button class="seat ${isBooked ? "booked" : ""}"
-            onclick="selectSeat('${slot.id}', ${i})"
-            ${isBooked ? "disabled" : ""}>
-            ${i}
-          </button>
-        `;
-      }
-
-      card.innerHTML = `
-        <div class="slotTitle">
-          <div>${slot.label}</div>
-          ${availabilityPill}
-        </div>
-        <div style="color:rgba(255,255,255,.65);font-size:13px;">${slot.time}</div>
-
-        <div class="seatGrid" style="margin-top:10px;">
-          ${seatsHTML}
-        </div>
-      `;
-
-      grid.appendChild(card);
-    });
-
-    updateSelectedInfo();
-    paintSelectedUI();
-  }
-
-  function selectSeat(slotId, seatNo){
-    selectedSlot = slotId;
-    selectedSeat = seatNo;
-    updateSelectedInfo();
-    paintSelectedUI();
-  }
-
-  function updateSelectedInfo(){
-    const info = document.getElementById("selectedInfo");
-    if(!selectedSlot || !selectedSeat){
-      info.innerText = "None";
-      return;
-    }
-    const slotLabel = SLOT_DATA.find(s=>s.id===selectedSlot)?.label || selectedSlot;
-    info.innerText = `${slotLabel} • Seat ${selectedSeat}`;
-  }
-
-  function paintSelectedUI(){
-    document.querySelectorAll(".seat").forEach(btn=>{
-      btn.classList.remove("selected");
-    });
-
-    if(!selectedSlot || !selectedSeat) return;
-
-    // Find matching seat button by scanning cards
-    const cards = document.querySelectorAll(".slotCard");
-    cards.forEach(card=>{
-      const title = card.querySelector(".slotTitle div")?.innerText || "";
-      // doesn't reliably map slotId. So simpler: after selecting seat, re-render and mark.
-    });
-
-    // easiest mark selected: re-render and add selected by slot+seat
-    SLOT_DATA.forEach(slot=>{
-      // nothing here. we will just mark after next render? Instead: mark on next call of render.
-    });
-
-    // Better: mark by using data attrs (not in earlier HTML). We'll just re-render quickly:
-    // But no flicker since minimal:
-    renderSlotsWithSelection();
   }
 
   function renderSlotsWithSelection(){
@@ -1112,7 +1029,7 @@
       const availableCount = slot.total - booked.length;
 
       const availabilityPill = availableCount === 0
-        ? `<span class="pill red">Houseful</span>`
+        ? `<span class="pill red">Slot Full</span>`
         : `<span class="pill green">${availableCount} Seats</span>`;
 
       const card = document.createElement("div");
@@ -1137,7 +1054,12 @@
           <div>${slot.label}</div>
           ${availabilityPill}
         </div>
+
         <div style="color:rgba(255,255,255,.65);font-size:13px;">${slot.time}</div>
+
+        <div style="margin-top:6px;color:rgba(255,255,255,.70);font-size:13px;">
+          Remaining seats: <b>${availableCount}/${slot.total}</b>
+        </div>
 
         <div class="seatGrid" style="margin-top:10px;">
           ${seatsHTML}
@@ -1150,24 +1072,66 @@
     updateSelectedInfo();
   }
 
+  function selectSeat(slotId, seatNo){
+    selectedSlot = slotId;
+    selectedSeat = seatNo;
+    renderSlotsWithSelection();
+  }
+
+  function updateSelectedInfo(){
+    const info = document.getElementById("selectedInfo");
+
+    if(!selectedSlot || !selectedSeat){
+      info.innerText = "None";
+    } else {
+      const slotLabel = SLOT_DATA.find(s=>s.id===selectedSlot)?.label || selectedSlot;
+      info.innerText = `${slotLabel} • Seat ${selectedSeat}`;
+    }
+
+    const my = document.getElementById("myBookingInfo");
+    const existing = getVisitorBooking();
+    if(existing){
+      my.innerText = `${existing.slotLabel} • Seat ${existing.seat}`;
+    } else {
+      my.innerText = "Not booked";
+    }
+  }
+
   function confirmSlotBooking(){
+    const visitorId = localStorage.getItem("ABO_VISITOR_ID") || "UNKNOWN";
+
+    // lock: 1 booking per visitor
+    const existing = getVisitorBooking();
+    if(existing && existing.visitorId === visitorId){
+      alert(`You have already booked a slot ✅\n\nSlot: ${existing.slotLabel}\nSeat: ${existing.seat}\n\nOnly 1 booking allowed per Visitor ID.`);
+      return;
+    }
+
     if(!selectedSlot || !selectedSeat){
       alert("Please select slot & seat first!");
       return;
     }
 
-    // save booking
     const booked = loadBookedSeats(selectedSlot);
     if(booked.includes(selectedSeat)){
       alert("Seat already booked. Please choose another.");
-      renderSlots();
+      renderSlotsWithSelection();
       return;
     }
+
     booked.push(selectedSeat);
     saveBookedSeats(selectedSlot, booked);
 
-    const visitorId = localStorage.getItem("ABO_VISITOR_ID") || "UNKNOWN";
     const slotLabel = SLOT_DATA.find(s=>s.id===selectedSlot)?.label || selectedSlot;
+
+    // save visitor booking lock
+    setVisitorBooking({
+      visitorId: visitorId,
+      slotId: selectedSlot,
+      slotLabel: slotLabel,
+      seat: selectedSeat,
+      bookedAt: new Date().toISOString()
+    });
 
     const msg =
       `Slot Booking Confirm%0A%0A`+
@@ -1182,7 +1146,7 @@
 
     selectedSlot = null;
     selectedSeat = null;
-    renderSlots();
+    renderSlotsWithSelection();
   }
 
   function resetBookings(){
@@ -1190,13 +1154,14 @@
     SLOT_DATA.forEach(slot=>{
       localStorage.removeItem(bookingKey(slot.id));
     });
+    clearVisitorBooking();
     selectedSlot = null;
     selectedSeat = null;
-    renderSlots();
+    renderSlotsWithSelection();
   }
 
   // ==========================
-  // Init
+  // INIT
   // ==========================
   const vid = getOrCreateVisitorId();
   document.getElementById("visitorBox").innerText = "Visitor ID: " + vid;
@@ -1205,7 +1170,7 @@
   window.addEventListener("load", ()=>{
     initSlider();
     revealBatches();
-    renderSlots();
+    renderSlotsWithSelection();
   });
   window.addEventListener("scroll", revealBatches);
 </script>
