@@ -21,6 +21,7 @@
       --accent:#00d4ff;
       --accent2:#00ff88;
       --warn:#ffcc00;
+      --danger:#ff4d4d;
     }
 
     *{box-sizing:border-box;margin:0;padding:0;font-family:'Poppins',sans-serif;}
@@ -58,14 +59,6 @@
       background:linear-gradient(45deg,var(--accent),var(--accent2));
       box-shadow:0 0 15px rgba(0,212,255,.6);
     }
-    .nav a{
-      color:var(--muted);
-      text-decoration:none;
-      margin-left:16px;
-      font-weight:600;
-      font-size:14px;
-    }
-    .nav a:hover{color:var(--txt);}
     .idTag{
       padding:8px 12px;
       border-radius:12px;
@@ -93,8 +86,8 @@
     }
     .copyBtn:hover{background:rgba(0,212,255,.28);}
 
-    /* Hero */
-    .container{max-width:1100px;margin:auto;padding:26px 18px 60px;}
+    .container{max-width:1100px;margin:auto;padding:26px 18px 70px;}
+
     .hero{
       display:grid;
       grid-template-columns: 1.1fr .9fr;
@@ -125,6 +118,7 @@
       color:var(--accent2);
       font-size:12px;
     }
+
     h1{
       font-size:44px;
       line-height:1.05;
@@ -155,6 +149,10 @@
       font-size:14px;
       letter-spacing:.2px;
       transition:.2s ease;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
     }
     .btnPrimary{
       background:linear-gradient(45deg,var(--accent),var(--accent2));
@@ -168,8 +166,14 @@
       border:1px solid rgba(255,255,255,.12);
     }
     .btnGhost:hover{background:rgba(255,255,255,.10);}
+    .btnDanger{
+      background:rgba(255,77,77,.12);
+      border:1px solid rgba(255,77,77,.25);
+      color:#ffbdbd;
+    }
+    .btnDanger:hover{background:rgba(255,77,77,.18);}
 
-    /* pricing cards */
+    /* Cards */
     .cards{
       display:grid;
       grid-template-columns:repeat(2,1fr);
@@ -212,85 +216,10 @@
       border:1px solid rgba(255,255,255,.12);
       background:rgba(255,204,0,.12);
       color:var(--warn);
+      z-index:3;
     }
 
-    /* animation zone */
-    .scene{
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.06);
-      border-radius:20px;
-      padding:18px 18px 8px;
-      overflow:hidden;
-      position:relative;
-    }
-    .road{
-      height:180px;
-      margin-top:18px;
-      border-radius:16px;
-      position:relative;
-      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(0,0,0,.14));
-      border:1px solid rgba(255,255,255,.10);
-      overflow:hidden;
-    }
-    .road:before{
-      content:"";
-      position:absolute;left:0;right:0;top:50%;
-      height:4px;
-      background: repeating-linear-gradient(90deg,
-        rgba(255,255,255,.75) 0 32px,
-        transparent 32px 64px);
-      transform: translateY(-50%);
-      opacity:.6;
-      animation: dash 1.1s linear infinite;
-    }
-    @keyframes dash{
-      from{background-position:0 0;}
-      to{background-position:120px 0;}
-    }
-    .car{
-      width:120px;
-      height:60px;
-      border-radius:18px;
-      position:absolute;
-      left:-140px;
-      top:92px;
-      background:linear-gradient(45deg,var(--accent),var(--accent2));
-      box-shadow:0 20px 40px rgba(0,212,255,.14);
-      animation: drive 4.5s linear infinite;
-    }
-    @keyframes drive{
-      0%{transform:translateX(0);}
-      100%{transform:translateX(1400px);}
-    }
-    .car:before{
-      content:"";
-      position:absolute;
-      top:10px;left:18px;
-      width:60px;height:22px;
-      border-radius:12px;
-      background:rgba(5,20,30,.55);
-      border:1px solid rgba(255,255,255,.25);
-    }
-    .wheel{
-      width:20px;height:20px;border-radius:50%;
-      background:#08131a;
-      position:absolute;
-      bottom:-10px;
-      border:2px solid rgba(255,255,255,.22);
-    }
-    .wheel.left{left:18px;}
-    .wheel.right{right:18px;}
-    .shadow{
-      width:140px;height:16px;
-      position:absolute;
-      left:-145px; top:148px;
-      background:rgba(0,0,0,.25);
-      filter: blur(12px);
-      border-radius:50%;
-      animation: drive 4.5s linear infinite;
-    }
-
-    /* sections */
+    /* General feature block */
     .section{
       margin-top:28px;
       display:grid;
@@ -306,6 +235,334 @@
     }
     .feature h4{font-size:16px;margin-bottom:6px;}
     .feature p{color:var(--muted);font-size:14px;line-height:1.6;}
+
+    /* Slider */
+    .scene{
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      border-radius:20px;
+      padding:18px 18px 16px;
+      overflow:hidden;
+      position:relative;
+    }
+    .slider{
+      margin-top:14px;
+      position:relative;
+      overflow:hidden;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.05);
+      box-shadow:0 20px 50px rgba(0,0,0,.35);
+      height:260px;
+    }
+    .slides{width:100%;height:100%;position:relative;}
+    .slide{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      opacity:0;
+      transform:scale(1.03);
+      transition:opacity .6s ease, transform .6s ease;
+    }
+    .slide.active{opacity:1;transform:scale(1);}
+    .navBtn{
+      position:absolute;
+      top:50%;
+      transform:translateY(-50%);
+      border:none;
+      cursor:pointer;
+      padding:10px 12px;
+      border-radius:12px;
+      background:rgba(0,0,0,.45);
+      color:white;
+      font-weight:800;
+      font-size:18px;
+      z-index:2;
+      border:1px solid rgba(255,255,255,.12);
+    }
+    .navBtn:hover{background:rgba(0,0,0,.6);}
+    .navBtn.prev{left:10px;}
+    .navBtn.next{right:10px;}
+    .dots{
+      position:absolute;
+      bottom:10px;
+      left:50%;
+      transform:translateX(-50%);
+      display:flex;
+      gap:8px;
+      z-index:2;
+    }
+    .dotBtn{
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      border:none;
+      cursor:pointer;
+      background:rgba(255,255,255,.35);
+    }
+    .dotBtn.active{
+      background:rgba(0,212,255,.95);
+      box-shadow:0 0 12px rgba(0,212,255,.5);
+    }
+
+    /* Students */
+    .studentGrid{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:12px;
+    }
+    @media(max-width:900px){.studentGrid{grid-template-columns:repeat(2,1fr);}}
+    @media(max-width:420px){.studentGrid{grid-template-columns:1fr;}}
+    .studentCard{
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.05);
+      border-radius:18px;
+      overflow:hidden;
+      position:relative;
+    }
+    .studentCard img{
+      width:100%;
+      height:180px;
+      object-fit:cover;
+      display:block;
+      transition:.25s ease;
+    }
+    .studentCard.blurOn img{
+      filter: blur(10px);
+      transform: scale(1.06);
+    }
+    .studentName{
+      position:absolute;
+      left:10px;
+      bottom:10px;
+      padding:6px 10px;
+      border-radius:12px;
+      background:rgba(0,0,0,.45);
+      border:1px solid rgba(255,255,255,.12);
+      color:white;
+      font-size:12px;
+      font-weight:800;
+    }
+
+    /* Batch timing */
+    .batchGrid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:14px;
+    }
+    @media(max-width:800px){.batchGrid{grid-template-columns:1fr;}}
+    .batchCard{
+      border-radius:18px;
+      padding:16px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      overflow:hidden;
+      position:relative;
+      transform:translateY(18px);
+      opacity:0;
+    }
+    .batchCard::before{
+      content:"";
+      position:absolute;
+      inset:-50px;
+      background: radial-gradient(circle at 20% 10%, rgba(0,212,255,.18), transparent 55%),
+                  radial-gradient(circle at 90% 60%, rgba(0,255,136,.10), transparent 55%);
+      filter:blur(18px);
+      z-index:0;
+    }
+    .batchCard *{position:relative;z-index:1;}
+    .batchIcon{
+      width:46px;height:46px;border-radius:14px;
+      display:flex;align-items:center;justify-content:center;
+      background:rgba(0,0,0,.22);
+      border:1px solid rgba(255,255,255,.12);
+      font-size:22px;
+      margin-bottom:10px;
+    }
+    .batchCard h3{font-size:18px;margin-bottom:8px;}
+    .batchCard p{color:rgba(255,255,255,.72);font-size:14px;line-height:1.6;}
+    .animateBatch.show{animation: batchPop .7s ease forwards;}
+    .animateBatch.delay1.show{animation-delay:.18s;}
+    @keyframes batchPop{
+      0%{transform:translateY(18px);opacity:0;}
+      100%{transform:translateY(0);opacity:1;}
+    }
+
+    /* Slot availability like BookMyShow */
+    .slotWrap{
+      border-radius:20px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      padding:16px;
+      overflow:hidden;
+      position:relative;
+    }
+    .slotTop{
+      display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center;
+      margin-bottom:12px;
+    }
+    .slotTop p{color:rgba(255,255,255,.7);font-size:14px;margin-top:6px;}
+    .slotGrid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:12px;
+      margin-top:14px;
+    }
+    @media(max-width:900px){.slotGrid{grid-template-columns:1fr;}}
+    .slotCard{
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);
+      padding:14px;
+    }
+    .slotTitle{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      margin-bottom:10px;
+      font-weight:800;
+    }
+    .pill{
+      font-size:12px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      color:rgba(255,255,255,.8);
+    }
+    .pill.green{
+      color:rgba(0,255,136,.95);
+      border-color:rgba(0,255,136,.22);
+      background:rgba(0,255,136,.08);
+    }
+    .pill.red{
+      color:#ffbdbd;
+      border-color:rgba(255,77,77,.22);
+      background:rgba(255,77,77,.10);
+    }
+
+    .seatGrid{
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      gap:8px;
+      margin-top:10px;
+    }
+    .seat{
+      height:38px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      cursor:pointer;
+      font-weight:800;
+      color:rgba(255,255,255,.85);
+      transition:.15s ease;
+    }
+    .seat:hover{transform:translateY(-2px);}
+    .seat.selected{
+      background:rgba(0,212,255,.22);
+      border-color:rgba(0,212,255,.35);
+      color:white;
+      box-shadow:0 0 18px rgba(0,212,255,.15);
+    }
+    .seat.booked{
+      background:rgba(255,255,255,.08);
+      opacity:.45;
+      cursor:not-allowed;
+      text-decoration:line-through;
+    }
+
+    .slotFooter{
+      margin-top:16px;
+      display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center;
+      padding-top:12px;
+      border-top:1px solid rgba(255,255,255,.10);
+      color:rgba(255,255,255,.7);
+      font-size:13px;
+    }
+
+    /* Modal popup */
+    .modal{
+      position:fixed;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+      z-index:1000;
+      background:rgba(0,0,0,.55);
+      backdrop-filter: blur(10px);
+    }
+    .modal.show{display:flex;}
+    .modalBox{
+      width:100%;
+      max-width:420px;
+      border-radius:20px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(10,16,32,.95);
+      box-shadow:0 25px 70px rgba(0,0,0,.45);
+      overflow:hidden;
+    }
+    .modalTop{
+      padding:14px 16px;
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      border-bottom:1px solid rgba(255,255,255,.10);
+    }
+    .closeBtn{
+      border:none;
+      cursor:pointer;
+      width:38px;
+      height:38px;
+      border-radius:12px;
+      background:rgba(255,255,255,.06);
+      color:white;
+      border:1px solid rgba(255,255,255,.12);
+      font-size:16px;
+    }
+    .closeBtn:hover{background:rgba(255,255,255,.10);}
+    .form{padding:16px;}
+    .form label{
+      display:block;
+      margin:10px 0 6px;
+      font-size:13px;
+      font-weight:700;
+      color:rgba(255,255,255,.85);
+    }
+    .form input, .form select{
+      width:100%;
+      padding:12px 12px;
+      border-radius:14px;
+      outline:none;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      color:white;
+      font-size:14px;
+    }
+    .form input::placeholder{color:rgba(255,255,255,.45);}
+
+    /* Floating WhatsApp */
+    .waFloat{
+      position:fixed;
+      right:18px;
+      bottom:18px;
+      width:56px;
+      height:56px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:50%;
+      text-decoration:none;
+      font-size:26px;
+      font-weight:800;
+      z-index:999;
+      background:linear-gradient(45deg,#25D366,#12b85a);
+      color:white;
+      box-shadow:0 20px 45px rgba(0,0,0,.35);
+      border:1px solid rgba(255,255,255,.18);
+      transition:.2s ease;
+    }
+    .waFloat:hover{transform:translateY(-3px) scale(1.03);}
 
     footer{
       margin-top:45px;
@@ -335,6 +592,7 @@
 
 <main class="container">
   <section class="hero" id="home">
+    <!-- LEFT -->
     <div>
       <div class="badge">
         <span>PRO</span>
@@ -344,13 +602,15 @@
       <h1>Learn Driving Like a Pro 🚗<br/>With Abhinaash A One</h1>
 
       <p>
-        Professional driving training with modern learning style.  
+        Professional driving training with modern learning style.
         We help you become confident on city roads, highways and traffic situations.
       </p>
 
       <div class="ctaRow">
         <button class="btn btnPrimary" onclick="scrollToPricing()">View Fees</button>
-        <button class="btn btnGhost" onclick="alert('Contact section will be added next 😊')">Contact</button>
+        <button class="btn btnPrimary" onclick="openAdmission()">Admission Form</button>
+        <button class="btn btnGhost" onclick="scrollToSlots()">Book Slot</button>
+        <button class="btn btnGhost" onclick="scrollToContact()">Contact</button>
       </div>
 
       <div class="cards" id="pricing">
@@ -374,40 +634,161 @@
       </div>
     </div>
 
+    <!-- RIGHT -->
     <div class="scene">
-      <h3 style="font-size:18px;margin-bottom:6px;">Live Practice Vibe</h3>
+      <h3 style="font-size:18px;margin-bottom:6px;">Training Car</h3>
       <p style="color:var(--muted);font-size:14px;line-height:1.6;">
-        Smooth animation + modern design for an eye catching homepage.
+        Tata Tigor • Smooth handling • Beginner friendly
       </p>
 
-      <div class="road">
-        <div class="shadow"></div>
-        <div class="car">
-          <div class="wheel left"></div>
-          <div class="wheel right"></div>
+      <div class="slider" id="carSlider">
+        <div class="slides">
+          <img src="assets/tigor1.jpg" class="slide active" alt="Tata Tigor 1">
+          <img src="assets/tigor2.jpg" class="slide" alt="Tata Tigor 2">
+          <img src="assets/tigor3.jpg" class="slide" alt="Tata Tigor 3">
         </div>
+        <button class="navBtn prev" onclick="prevSlide()">❮</button>
+        <button class="navBtn next" onclick="nextSlide()">❯</button>
+        <div class="dots" id="dots"></div>
       </div>
 
-      <p style="margin-top:10px;color:var(--muted);font-size:13px;">
-        Visitor ID helps build future “Follow Each Other Chart System”.
+      <p style="margin-top:12px;color:rgba(255,255,255,.65);font-size:12px;line-height:1.6;">
+        Tip: Book your slot fast! Limited seats per batch.
       </p>
     </div>
   </section>
 
+  <!-- FEATURES -->
   <section class="section" id="about">
     <div class="feature">
       <h4>✅ Professional Trainer</h4>
       <p>Learn driving from experienced instructors with simple techniques.</p>
     </div>
-
     <div class="feature">
       <h4>✅ Traffic Confidence</h4>
       <p>Master turns, reverse, hill-start, parking, signal & traffic judgement.</p>
     </div>
-
     <div class="feature">
       <h4>✅ Safety First</h4>
       <p>We focus on discipline, rules and safe driving habits.</p>
+    </div>
+  </section>
+
+  <!-- BATCH TIMING -->
+  <section id="batches" style="margin-top:28px;">
+    <div class="feature" style="border-radius:20px;">
+      <h4 style="font-size:18px;">🕒 Batches Timing</h4>
+      <p style="margin-top:6px;color:rgba(255,255,255,.7);font-size:14px;">
+        Choose your preferred batch and start learning with confidence.
+      </p>
+
+      <div class="batchGrid" style="margin-top:16px;">
+        <div class="batchCard animateBatch">
+          <div class="batchIcon">🌅</div>
+          <h3>Morning</h3>
+          <p>7:00 AM – 8:00 AM</p>
+          <p>8:00 AM – 9:00 AM</p>
+        </div>
+
+        <div class="batchCard animateBatch delay1">
+          <div class="batchIcon">🌇</div>
+          <h3>Evening</h3>
+          <p>3:00 PM – 4:00 PM</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLOT BOOKING -->
+  <section id="slots" style="margin-top:28px;">
+    <div class="slotWrap">
+      <div class="slotTop">
+        <div>
+          <h4 style="font-size:18px;">🎟️ Book Your Slot</h4>
+          <p>Choose a batch time and select your seat like BookMyShow.</p>
+        </div>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <button class="btn btnGhost" onclick="resetBookings()">Reset Seats (Demo)</button>
+          <button class="btn btnPrimary" onclick="confirmSlotBooking()">Confirm Booking</button>
+        </div>
+      </div>
+
+      <div class="slotGrid" id="slotGrid"></div>
+
+      <div class="slotFooter">
+        <div>
+          <b>Selected:</b> <span id="selectedInfo">None</span>
+        </div>
+        <div>
+          <span class="pill green">Available</span>
+          <span class="pill" style="margin-left:8px;">Selected</span>
+          <span class="pill red" style="margin-left:8px;">Booked</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STUDENTS -->
+  <section id="students" style="margin-top:28px;">
+    <div class="feature" style="border-radius:20px;">
+      <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center;">
+        <div>
+          <h4 style="font-size:18px;">👨‍🎓 Our Students</h4>
+          <p style="margin-top:6px;color:rgba(255,255,255,.7);font-size:14px;">
+            Real learners from Abhinaash A One Driving Classes.
+          </p>
+        </div>
+
+        <button class="btn btnGhost" onclick="toggleBlur()" id="blurBtn"
+          style="border:1px solid rgba(255,255,255,.16);">
+          Blur: ON
+        </button>
+      </div>
+
+      <div class="studentGrid" style="margin-top:16px;">
+        <div class="studentCard blurOn">
+          <img src="assets/student1.jpg" alt="Student 1">
+          <div class="studentName">Student</div>
+        </div>
+        <div class="studentCard blurOn">
+          <img src="assets/student2.jpg" alt="Student 2">
+          <div class="studentName">Student</div>
+        </div>
+        <div class="studentCard blurOn">
+          <img src="assets/student3.jpg" alt="Student 3">
+          <div class="studentName">Student</div>
+        </div>
+        <div class="studentCard blurOn">
+          <img src="assets/student4.jpg" alt="Student 4">
+          <div class="studentName">Student</div>
+        </div>
+      </div>
+
+      <p style="margin-top:12px;color:rgba(255,255,255,.6);font-size:12px;">
+        Note: Blur ON by default for privacy.
+      </p>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="section" id="contact" style="margin-top:28px;">
+    <div class="feature" style="grid-column:1/-1;">
+      <h4 style="font-size:18px;">📞 Contact Abhinaash A One Driving Classes</h4>
+      <p style="margin-top:6px;color:rgba(255,255,255,.7);font-size:14px;">
+        Call / WhatsApp anytime for admission & class timings.
+      </p>
+
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:14px;">
+        <a href="tel:+917008186187" class="btn btnPrimary" style="text-decoration:none;display:inline-block;">
+          Call Now: 7008186187
+        </a>
+
+        <a href="https://wa.me/917008186187" target="_blank" class="btn btnGhost"
+           style="text-decoration:none;display:inline-block;border:1px solid rgba(255,255,255,.18);">
+          WhatsApp: 7008186187
+        </a>
+      </div>
     </div>
   </section>
 
@@ -416,10 +797,54 @@
   </footer>
 </main>
 
+<!-- Floating WhatsApp Button -->
+<a href="https://wa.me/917008186187" target="_blank" class="waFloat" aria-label="WhatsApp">
+  💬
+</a>
+
+<!-- Admission Popup -->
+<div class="modal" id="admissionModal">
+  <div class="modalBox">
+    <div class="modalTop">
+      <div>
+        <h3 style="font-size:18px;">📝 Admission Form</h3>
+        <p style="color:rgba(255,255,255,.65);font-size:13px;margin-top:4px;">
+          Fill your details, we will contact you soon.
+        </p>
+      </div>
+      <button class="closeBtn" onclick="closeAdmission()">✕</button>
+    </div>
+
+    <form onsubmit="submitAdmission(event)" class="form">
+      <label>Full Name</label>
+      <input type="text" id="sName" placeholder="Enter your name" required>
+
+      <label>Phone Number</label>
+      <input type="tel" id="sPhone" placeholder="10 digit mobile number" required>
+
+      <label>Class Type</label>
+      <select id="sClass" required>
+        <option value="">Select</option>
+        <option value="Group - 30 Classes (₹4500)">Group - 30 Classes (₹4500)</option>
+        <option value="Personal - 30 Classes (₹8000)">Personal - 30 Classes (₹8000)</option>
+      </select>
+
+      <button type="submit" class="btn btnPrimary" style="width:100%;margin-top:10px;">
+        Submit
+      </button>
+
+      <p style="margin-top:10px;color:rgba(255,255,255,.55);font-size:12px;line-height:1.6;">
+        By submitting, you agree to be contacted by Abhinaash A One Driving Classes.
+      </p>
+    </form>
+  </div>
+</div>
+
 <script>
-  // Unique Visitor ID System (saved in browser)
+  // ==========================
+  // Unique Visitor ID System
+  // ==========================
   function generateVisitorId() {
-    // Example: ABO-2026-8F3A7C2D
     const random = Math.random().toString(16).slice(2, 10).toUpperCase();
     const year = new Date().getFullYear();
     return `ABO-${year}-${random}`;
@@ -441,14 +866,348 @@
     alert("Visitor ID copied: " + vid);
   }
 
-  function scrollToPricing(){
-    document.getElementById("pricing").scrollIntoView({behavior:"smooth"});
+  // ==========================
+  // Scroll functions
+  // ==========================
+  function scrollToPricing(){ document.getElementById("pricing").scrollIntoView({behavior:"smooth"}); }
+  function scrollToContact(){ document.getElementById("contact").scrollIntoView({behavior:"smooth"}); }
+  function scrollToSlots(){ document.getElementById("slots").scrollIntoView({behavior:"smooth"}); }
+
+  // ==========================
+  // Slider
+  // ==========================
+  let currentSlide = 0;
+  let slideInterval;
+
+  function initSlider(){
+    const slides = document.querySelectorAll("#carSlider .slide");
+    const dotsBox = document.getElementById("dots");
+    dotsBox.innerHTML = "";
+
+    slides.forEach((_, i)=>{
+      const b = document.createElement("button");
+      b.className = "dotBtn" + (i===0 ? " active" : "");
+      b.onclick = ()=> goToSlide(i);
+      dotsBox.appendChild(b);
+    });
+
+    slideInterval = setInterval(()=> nextSlide(), 3500);
   }
 
+  function goToSlide(i){
+    const slides = document.querySelectorAll("#carSlider .slide");
+    const dots = document.querySelectorAll("#dots .dotBtn");
+
+    slides[currentSlide].classList.remove("active");
+    dots[currentSlide].classList.remove("active");
+
+    currentSlide = i;
+
+    slides[currentSlide].classList.add("active");
+    dots[currentSlide].classList.add("active");
+
+    clearInterval(slideInterval);
+    slideInterval = setInterval(()=> nextSlide(), 3500);
+  }
+
+  function nextSlide(){
+    const slides = document.querySelectorAll("#carSlider .slide");
+    goToSlide((currentSlide + 1) % slides.length);
+  }
+
+  function prevSlide(){
+    const slides = document.querySelectorAll("#carSlider .slide");
+    goToSlide((currentSlide - 1 + slides.length) % slides.length);
+  }
+
+  // ==========================
+  // Batch animation on scroll
+  // ==========================
+  function revealBatches(){
+    const items = document.querySelectorAll(".animateBatch");
+    const trigger = window.innerHeight * 0.86;
+
+    items.forEach(el=>{
+      const top = el.getBoundingClientRect().top;
+      if(top < trigger) el.classList.add("show");
+    });
+  }
+
+  // ==========================
+  // Blur privacy toggle
+  // ==========================
+  let blurEnabled = true;
+  function toggleBlur(){
+    blurEnabled = !blurEnabled;
+    const cards = document.querySelectorAll(".studentCard");
+
+    cards.forEach(card=>{
+      if(blurEnabled) card.classList.add("blurOn");
+      else card.classList.remove("blurOn");
+    });
+
+    document.getElementById("blurBtn").innerText = "Blur: " + (blurEnabled ? "ON" : "OFF");
+  }
+
+  // ==========================
+  // Admission popup
+  // ==========================
+  function openAdmission(){
+    document.getElementById("admissionModal").classList.add("show");
+  }
+  function closeAdmission(){
+    document.getElementById("admissionModal").classList.remove("show");
+  }
+  document.addEventListener("click",(e)=>{
+    const modal = document.getElementById("admissionModal");
+    if(modal.classList.contains("show") && e.target === modal){
+      closeAdmission();
+    }
+  });
+
+  function submitAdmission(e){
+    e.preventDefault();
+
+    const name = document.getElementById("sName").value.trim();
+    const phone = document.getElementById("sPhone").value.trim();
+    const classType = document.getElementById("sClass").value;
+
+    if(phone.length < 10){
+      alert("Please enter valid phone number");
+      return;
+    }
+
+    const visitorId = localStorage.getItem("ABO_VISITOR_ID") || "UNKNOWN";
+
+    const msg =
+      `Admission Request%0A%0A`+
+      `Name: ${encodeURIComponent(name)}%0A`+
+      `Phone: ${encodeURIComponent(phone)}%0A`+
+      `Class: ${encodeURIComponent(classType)}%0A`+
+      `Visitor ID: ${encodeURIComponent(visitorId)}`;
+
+    window.open(`https://wa.me/917008186187?text=${msg}`, "_blank");
+    closeAdmission();
+    document.querySelector(".form").reset();
+  }
+
+  // ==========================
+  // Slot availability (BookMyShow style)
+  // ==========================
+  const SLOT_DATA = [
+    { id:"M7_8",  label:"Morning 7–8",  time:"7:00 AM – 8:00 AM", total:10 },
+    { id:"M8_9",  label:"Morning 8–9",  time:"8:00 AM – 9:00 AM", total:10 },
+    { id:"E3_4",  label:"Evening 3–4",  time:"3:00 PM – 4:00 PM", total:10 }
+  ];
+
+  let selectedSlot = null;
+  let selectedSeat = null;
+
+  function bookingKey(slotId){
+    return `ABO_BOOKED_${slotId}`;
+  }
+
+  function loadBookedSeats(slotId){
+    const raw = localStorage.getItem(bookingKey(slotId));
+    return raw ? JSON.parse(raw) : [];
+  }
+
+  function saveBookedSeats(slotId, booked){
+    localStorage.setItem(bookingKey(slotId), JSON.stringify(booked));
+  }
+
+  function renderSlots(){
+    const grid = document.getElementById("slotGrid");
+    grid.innerHTML = "";
+
+    SLOT_DATA.forEach(slot=>{
+      const booked = loadBookedSeats(slot.id);
+      const availableCount = slot.total - booked.length;
+
+      const availabilityPill = availableCount === 0
+        ? `<span class="pill red">Houseful</span>`
+        : `<span class="pill green">${availableCount} Seats</span>`;
+
+      const card = document.createElement("div");
+      card.className = "slotCard";
+
+      let seatsHTML = "";
+      for(let i=1;i<=slot.total;i++){
+        const isBooked = booked.includes(i);
+        seatsHTML += `
+          <button class="seat ${isBooked ? "booked" : ""}"
+            onclick="selectSeat('${slot.id}', ${i})"
+            ${isBooked ? "disabled" : ""}>
+            ${i}
+          </button>
+        `;
+      }
+
+      card.innerHTML = `
+        <div class="slotTitle">
+          <div>${slot.label}</div>
+          ${availabilityPill}
+        </div>
+        <div style="color:rgba(255,255,255,.65);font-size:13px;">${slot.time}</div>
+
+        <div class="seatGrid" style="margin-top:10px;">
+          ${seatsHTML}
+        </div>
+      `;
+
+      grid.appendChild(card);
+    });
+
+    updateSelectedInfo();
+    paintSelectedUI();
+  }
+
+  function selectSeat(slotId, seatNo){
+    selectedSlot = slotId;
+    selectedSeat = seatNo;
+    updateSelectedInfo();
+    paintSelectedUI();
+  }
+
+  function updateSelectedInfo(){
+    const info = document.getElementById("selectedInfo");
+    if(!selectedSlot || !selectedSeat){
+      info.innerText = "None";
+      return;
+    }
+    const slotLabel = SLOT_DATA.find(s=>s.id===selectedSlot)?.label || selectedSlot;
+    info.innerText = `${slotLabel} • Seat ${selectedSeat}`;
+  }
+
+  function paintSelectedUI(){
+    document.querySelectorAll(".seat").forEach(btn=>{
+      btn.classList.remove("selected");
+    });
+
+    if(!selectedSlot || !selectedSeat) return;
+
+    // Find matching seat button by scanning cards
+    const cards = document.querySelectorAll(".slotCard");
+    cards.forEach(card=>{
+      const title = card.querySelector(".slotTitle div")?.innerText || "";
+      // doesn't reliably map slotId. So simpler: after selecting seat, re-render and mark.
+    });
+
+    // easiest mark selected: re-render and add selected by slot+seat
+    SLOT_DATA.forEach(slot=>{
+      // nothing here. we will just mark after next render? Instead: mark on next call of render.
+    });
+
+    // Better: mark by using data attrs (not in earlier HTML). We'll just re-render quickly:
+    // But no flicker since minimal:
+    renderSlotsWithSelection();
+  }
+
+  function renderSlotsWithSelection(){
+    const grid = document.getElementById("slotGrid");
+    grid.innerHTML = "";
+
+    SLOT_DATA.forEach(slot=>{
+      const booked = loadBookedSeats(slot.id);
+      const availableCount = slot.total - booked.length;
+
+      const availabilityPill = availableCount === 0
+        ? `<span class="pill red">Houseful</span>`
+        : `<span class="pill green">${availableCount} Seats</span>`;
+
+      const card = document.createElement("div");
+      card.className = "slotCard";
+
+      let seatsHTML = "";
+      for(let i=1;i<=slot.total;i++){
+        const isBooked = booked.includes(i);
+        const isSelected = (slot.id === selectedSlot && i === selectedSeat);
+
+        seatsHTML += `
+          <button class="seat ${isBooked ? "booked" : ""} ${isSelected ? "selected" : ""}"
+            onclick="selectSeat('${slot.id}', ${i})"
+            ${isBooked ? "disabled" : ""}>
+            ${i}
+          </button>
+        `;
+      }
+
+      card.innerHTML = `
+        <div class="slotTitle">
+          <div>${slot.label}</div>
+          ${availabilityPill}
+        </div>
+        <div style="color:rgba(255,255,255,.65);font-size:13px;">${slot.time}</div>
+
+        <div class="seatGrid" style="margin-top:10px;">
+          ${seatsHTML}
+        </div>
+      `;
+
+      grid.appendChild(card);
+    });
+
+    updateSelectedInfo();
+  }
+
+  function confirmSlotBooking(){
+    if(!selectedSlot || !selectedSeat){
+      alert("Please select slot & seat first!");
+      return;
+    }
+
+    // save booking
+    const booked = loadBookedSeats(selectedSlot);
+    if(booked.includes(selectedSeat)){
+      alert("Seat already booked. Please choose another.");
+      renderSlots();
+      return;
+    }
+    booked.push(selectedSeat);
+    saveBookedSeats(selectedSlot, booked);
+
+    const visitorId = localStorage.getItem("ABO_VISITOR_ID") || "UNKNOWN";
+    const slotLabel = SLOT_DATA.find(s=>s.id===selectedSlot)?.label || selectedSlot;
+
+    const msg =
+      `Slot Booking Confirm%0A%0A`+
+      `Slot: ${encodeURIComponent(slotLabel)}%0A`+
+      `Seat: ${encodeURIComponent(selectedSeat)}%0A`+
+      `Visitor ID: ${encodeURIComponent(visitorId)}%0A`+
+      `Time: ${encodeURIComponent(new Date().toLocaleString())}`;
+
+    window.open(`https://wa.me/917008186187?text=${msg}`, "_blank");
+
+    alert("Seat booked successfully ✅");
+
+    selectedSlot = null;
+    selectedSeat = null;
+    renderSlots();
+  }
+
+  function resetBookings(){
+    if(!confirm("Reset all seats? (Demo only)")) return;
+    SLOT_DATA.forEach(slot=>{
+      localStorage.removeItem(bookingKey(slot.id));
+    });
+    selectedSlot = null;
+    selectedSeat = null;
+    renderSlots();
+  }
+
+  // ==========================
   // Init
+  // ==========================
   const vid = getOrCreateVisitorId();
   document.getElementById("visitorBox").innerText = "Visitor ID: " + vid;
   document.getElementById("year").innerText = new Date().getFullYear();
+
+  window.addEventListener("load", ()=>{
+    initSlider();
+    revealBatches();
+    renderSlots();
+  });
+  window.addEventListener("scroll", revealBatches);
 </script>
 </body>
 </html>
