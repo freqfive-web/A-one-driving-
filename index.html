@@ -836,7 +836,7 @@
   </div>
 </div>
 
-<script>
+<script type="module">
   // ==========================
   // Unique Visitor ID
   // ==========================
@@ -1173,6 +1173,401 @@
     renderSlotsWithSelection();
   });
   window.addEventListener("scroll", revealBatches);
+  
+  
+  
+
+  // ==========================
+  // Firebase imports
+  // ==========================
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
+  import {
+    getFirestore,
+    collection,
+    doc,
+    setDoc,
+    getDoc,
+    deleteDoc,
+    onSnapshot,
+    serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
+
+  // ==========================
+  // Firebase config (yours)
+  // ==========================
+  const firebaseConfig = {
+    apiKey: "AIzaSyC3gWi8p85z-wkoJeWbN3jYoQpcIar8Sww",
+    authDomain: "abinash-driving.firebaseapp.com",
+    projectId: "abinash-driving",
+    storageBucket: "abinash-driving.firebasestorage.app",
+    messagingSenderId: "641148830173",
+    appId: "1:641148830173:web:b7a500e5e7e2463da0f634",
+    measurementId: "G-BSL54XEDVX"
+  };
+
+  // Firebase init
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // ==========================
+  // Unique Visitor ID
+  // ==========================
+  function generateVisitorId() {
+    const random = Math.random().toString(16).slice(2, 10).toUpperCase();
+    const year = new Date().getFullYear();
+    return `ABO-${year}-${random}`;
+  }
+
+  function getOrCreateVisitorId() {
+    let vid = localStorage.getItem("ABO_VISITOR_ID");
+    if (!vid) {
+      vid = generateVisitorId();
+      localStorage.setItem("ABO_VISITOR_ID", vid);
+      localStorage.setItem("ABO_FIRST_VISIT", new Date().toISOString());
+    }
+    return vid;
+  }
+
+  window.copyVisitorId = function(){
+    const vid = localStorage.getItem("ABO_VISITOR_ID") || "";
+    navigator.clipboard.writeText(vid);
+    alert("Visitor ID copied: " + vid);
+  }
+
+  // init visitor display
+  const vid = getOrCreateVisitorId();
+  document.getElementById("visitorBox").innerText = "Visitor ID: " + vid;
+  document.getElementById("year").innerText = new Date().getFullYear();
+
+  // ==========================
+  // Scroll
+  // ==========================
+  window.scrollToPricing = ()=> document.getElementById("pricing").scrollIntoView({behavior:"smooth"});
+  window.scrollToContact = ()=> document.getElementById("contact").scrollIntoView({behavior:"smooth"});
+  window.scrollToSlots = ()=> document.getElementById("slots").scrollIntoView({behavior:"smooth"});
+
+  // ==========================
+  // Slider
+  // ==========================
+  let currentSlide = 0;
+  let slideInterval;
+
+  function initSlider(){
+    const slides = document.querySelectorAll("#carSlider .slide");
+    const dotsBox = document.getElementById("dots");
+    dotsBox.innerHTML = "";
+
+    slides.forEach((_, i)=>{
+      const b = document.createElement("button");
+      b.className = "dotBtn" + (i===0 ? " active" : "");
+      b.onclick = ()=> goToSlide(i);
+      dotsBox.appendChild(b);
+    });
+
+    slideInterval = setInterval(()=> nextSlide(), 3500);
+  }
+
+  function goToSlide(i){
+    const slides = document.querySelectorAll("#carSlider .slide");
+    const dots = document.querySelectorAll("#dots .dotBtn");
+
+    slides[currentSlide].classList.remove("active");
+    dots[currentSlide].classList.remove("active");
+
+    currentSlide = i;
+
+    slides[currentSlide].classList.add("active");
+    dots[currentSlide].classList.add("active");
+
+    clearInterval(slideInterval);
+    slideInterval = setInterval(()=> nextSlide(), 3500);
+  }
+
+  function nextSlide(){
+    const slides = document.querySelectorAll("#carSlider .slide");
+    goToSlide((currentSlide + 1) % slides.length);
+  }
+  function prevSlide(){
+    const slides = document.querySelectorAll("#carSlider .slide");
+    goToSlide((currentSlide - 1 + slides.length) % slides.length);
+  }
+
+  window.nextSlide = nextSlide;
+  window.prevSlide = prevSlide;
+
+  // ==========================
+  // Batch animation
+  // ==========================
+  function revealBatches(){
+    const items = document.querySelectorAll(".animateBatch");
+    const trigger = window.innerHeight * 0.86;
+    items.forEach(el=>{
+      const top = el.getBoundingClientRect().top;
+      if(top < trigger) el.classList.add("show");
+    });
+  }
+
+  window.addEventListener("scroll", revealBatches);
+
+  // ==========================
+  // Students blur toggle
+  // ==========================
+  let blurEnabled = true;
+  window.toggleBlur = function(){
+    blurEnabled = !blurEnabled;
+    const cards = document.querySelectorAll(".studentCard");
+    cards.forEach(card=>{
+      if(blurEnabled) card.classList.add("blurOn");
+      else card.classList.remove("blurOn");
+    });
+    document.getElementById("blurBtn").innerText = "Blur: " + (blurEnabled ? "ON" : "OFF");
+  }
+
+  // ==========================
+  // Admission popup
+  // ==========================
+  window.openAdmission = ()=> document.getElementById("admissionModal").classList.add("show");
+  window.closeAdmission = ()=> document.getElementById("admissionModal").classList.remove("show");
+
+  document.addEventListener("click",(e)=>{
+    const modal = document.getElementById("admissionModal");
+    if(modal.classList.contains("show") && e.target === modal){
+      window.closeAdmission();
+    }
+  });
+
+  window.submitAdmission = function(e){
+    e.preventDefault();
+    const name = document.getElementById("sName").value.trim();
+    const phone = document.getElementById("sPhone").value.trim();
+    const classType = document.getElementById("sClass").value;
+
+    if(phone.length < 10){
+      alert("Please enter valid phone number");
+      return;
+    }
+
+    const visitorId = localStorage.getItem("ABO_VISITOR_ID") || "UNKNOWN";
+    const msg =
+      `Admission Request%0A%0A`+
+      `Name: ${encodeURIComponent(name)}%0A`+
+      `Phone: ${encodeURIComponent(phone)}%0A`+
+      `Class: ${encodeURIComponent(classType)}%0A`+
+      `Visitor ID: ${encodeURIComponent(visitorId)}`;
+
+    window.open(`https://wa.me/917008186187?text=${msg}`, "_blank");
+    window.closeAdmission();
+    document.querySelector(".form").reset();
+  }
+
+  // ==========================
+  // SLOT BOOKING - REALTIME (Firestore)
+  // ==========================
+  const SLOT_DATA = [
+    { id:"M7_8", label:"Morning 7–8", time:"7:00 AM – 8:00 AM", total:4 },
+    { id:"M8_9", label:"Morning 8–9", time:"8:00 AM – 9:00 AM", total:4 },
+    { id:"E3_4", label:"Evening 3–4", time:"3:00 PM – 4:00 PM", total:4 }
+  ];
+
+  const slotCollection = collection(db, "slotBookings");
+
+  let selectedSlot = null;
+  let selectedSeat = null;
+
+  // In-memory booked map (realtime)
+  let BOOKED_MAP = {}; // key: slotId_seat -> doc data
+
+  function seatDocId(slotId, seat){
+    return `${slotId}_${seat}`;
+  }
+
+  function isSeatBooked(slotId, seat){
+    return !!BOOKED_MAP[seatDocId(slotId, seat)];
+  }
+
+  function countBooked(slotId){
+    let c = 0;
+    for(let i=1;i<=4;i++){
+      if(isSeatBooked(slotId,i)) c++;
+    }
+    return c;
+  }
+
+  function findVisitorBooking(visitorId){
+    const keys = Object.keys(BOOKED_MAP);
+    for(const k of keys){
+      if(BOOKED_MAP[k]?.visitorId === visitorId){
+        return BOOKED_MAP[k];
+      }
+    }
+    return null;
+  }
+
+  function renderSlots(){
+    const grid = document.getElementById("slotGrid");
+    grid.innerHTML = "";
+
+    SLOT_DATA.forEach(slot=>{
+      const bookedCount = countBooked(slot.id);
+      const availableCount = slot.total - bookedCount;
+
+      const availabilityPill = availableCount === 0
+        ? `<span class="pill red">Slot Full</span>`
+        : `<span class="pill green">${availableCount} Seats</span>`;
+
+      let seatsHTML = "";
+      for(let i=1;i<=slot.total;i++){
+        const booked = isSeatBooked(slot.id, i);
+        const selected = (selectedSlot === slot.id && selectedSeat === i);
+
+        seatsHTML += `
+          <button class="seat ${booked ? "booked" : ""} ${selected ? "selected" : ""}"
+            onclick="selectSeat('${slot.id}', ${i})"
+            ${booked ? "disabled" : ""}>
+            ${i}
+          </button>
+        `;
+      }
+
+      const card = document.createElement("div");
+      card.className = "slotCard";
+      card.innerHTML = `
+        <div class="slotTitle">
+          <div>${slot.label}</div>
+          ${availabilityPill}
+        </div>
+
+        <div style="color:rgba(255,255,255,.65);font-size:13px;">${slot.time}</div>
+
+        <div style="margin-top:6px;color:rgba(255,255,255,.70);font-size:13px;">
+          Remaining seats: <b>${availableCount}/${slot.total}</b>
+        </div>
+
+        <div class="seatGrid" style="margin-top:10px;">
+          ${seatsHTML}
+        </div>
+      `;
+
+      grid.appendChild(card);
+    });
+
+    updateSelectedInfo();
+  }
+
+  // expose for buttons
+  window.selectSeat = function(slotId, seat){
+    selectedSlot = slotId;
+    selectedSeat = seat;
+    renderSlots();
+  }
+
+  function updateSelectedInfo(){
+    const info = document.getElementById("selectedInfo");
+    if(!selectedSlot || !selectedSeat){
+      info.innerText = "None";
+    } else {
+      const slotLabel = SLOT_DATA.find(s=>s.id===selectedSlot)?.label || selectedSlot;
+      info.innerText = `${slotLabel} • Seat ${selectedSeat}`;
+    }
+
+    const my = document.getElementById("myBookingInfo");
+    const existing = findVisitorBooking(vid);
+    if(existing){
+      const slotLabel = SLOT_DATA.find(s=>s.id===existing.slotId)?.label || existing.slotId;
+      my.innerText = `${slotLabel} • Seat ${existing.seat}`;
+    } else {
+      my.innerText = "Not booked";
+    }
+  }
+
+  window.confirmSlotBooking = async function(){
+    // 1 booking per visitor
+    const already = findVisitorBooking(vid);
+    if(already){
+      const slotLabel = SLOT_DATA.find(s=>s.id===already.slotId)?.label || already.slotId;
+      alert(`You have already booked ✅\n\nSlot: ${slotLabel}\nSeat: ${already.seat}\n\nOnly 1 booking allowed per Visitor ID.`);
+      return;
+    }
+
+    if(!selectedSlot || !selectedSeat){
+      alert("Please select slot & seat first!");
+      return;
+    }
+
+    // check realtime map first
+    if(isSeatBooked(selectedSlot, selectedSeat)){
+      alert("Seat already booked. Please choose another.");
+      renderSlots();
+      return;
+    }
+
+    // Try booking in Firestore
+    const docRef = doc(db, "slotBookings", seatDocId(selectedSlot, selectedSeat));
+
+    // Double check in DB (avoid collision)
+    const snap = await getDoc(docRef);
+    if(snap.exists()){
+      alert("Seat already booked. Please choose another.");
+      return;
+    }
+
+    await setDoc(docRef, {
+      slotId: selectedSlot,
+      seat: selectedSeat,
+      visitorId: vid,
+      bookedAt: serverTimestamp()
+    });
+
+    // WhatsApp message
+    const slotLabel = SLOT_DATA.find(s=>s.id===selectedSlot)?.label || selectedSlot;
+    const msg =
+      `Slot Booking Confirm%0A%0A`+
+      `Slot: ${encodeURIComponent(slotLabel)}%0A`+
+      `Seat: ${encodeURIComponent(selectedSeat)}%0A`+
+      `Visitor ID: ${encodeURIComponent(vid)}%0A`+
+      `Time: ${encodeURIComponent(new Date().toLocaleString())}`;
+
+    window.open(`https://wa.me/917008186187?text=${msg}`, "_blank");
+
+    alert("Seat booked successfully ✅");
+
+    selectedSlot = null;
+    selectedSeat = null;
+    renderSlots();
+  }
+
+  // Demo reset (delete all docs)
+  window.resetBookings = async function(){
+    if(!confirm("Reset all seats? (This will delete bookings from Firebase)")) return;
+
+    for(const slot of SLOT_DATA){
+      for(let i=1;i<=slot.total;i++){
+        await deleteDoc(doc(db, "slotBookings", seatDocId(slot.id, i)));
+      }
+    }
+    alert("All bookings cleared ✅");
+  }
+
+  // realtime listener
+  function startRealtimeListener(){
+    onSnapshot(slotCollection, (snapshot)=>{
+      BOOKED_MAP = {};
+      snapshot.forEach((d)=>{
+        BOOKED_MAP[d.id] = d.data();
+      });
+      renderSlots();
+    });
+  }
+
+  // ==========================
+  // Init
+  // ==========================
+  window.addEventListener("load", ()=>{
+    initSlider();
+    revealBatches();
+    startRealtimeListener();
+  });
+
 </script>
 </body>
 </html>
