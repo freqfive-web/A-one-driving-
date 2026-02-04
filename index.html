@@ -32,7 +32,7 @@
                   radial-gradient(900px 500px at 80% 40%, rgba(0,255,136,.10), transparent 60%),
                   linear-gradient(180deg,var(--bg1),var(--bg2));
       overflow-x:hidden;
-      padding-bottom:90px; /* important because fixed bar */
+      padding-bottom:90px;
     }
 
     header{
@@ -125,13 +125,49 @@
       font-size:12px;
     }
 
-    h1{
-      font-size:42px;
+    /* Stylish animated title */
+    .heroTitle{
+      font-size:44px;
       line-height:1.05;
-      font-weight:800;
-      margin-bottom:12px;
+      font-weight:900;
+      margin-bottom:14px;
     }
-    @media(max-width:900px){h1{font-size:34px;}}
+    @media(max-width:900px){.heroTitle{font-size:34px;}}
+
+    .heroTitle .shine{
+      background: linear-gradient(90deg, #fff, var(--accent), var(--accent2), #fff);
+      background-size: 200% auto;
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      animation: shine 3s linear infinite;
+      display:inline-block;
+    }
+    @keyframes shine{
+      0%{background-position:0% center;}
+      100%{background-position:200% center;}
+    }
+
+    .typingLine{
+      display:block;
+      margin-top:8px;
+      font-size:16px;
+      color:rgba(255,255,255,.78);
+      font-weight:800;
+      white-space:nowrap;
+      overflow:hidden;
+      border-right:2px solid rgba(255,255,255,.6);
+      width:0;
+      animation: typing 3s steps(45,end) forwards, blinkCaret .7s step-end infinite;
+    }
+
+    @keyframes typing{
+      from{width:0;}
+      to{width:100%;}
+    }
+    @keyframes blinkCaret{
+      50%{border-color:transparent;}
+    }
+
     .hero p{
       color:var(--muted);
       font-size:15px;
@@ -177,6 +213,7 @@
 
     @media(max-width:520px){
       .ctaRow .btn{flex:1 1 48%;}
+      .typingLine{font-size:14px;}
     }
 
     /* Pricing cards */
@@ -420,7 +457,6 @@
       margin-top:12px;
     }
 
-    /* Available seat: green */
     .seat{
       min-height:42px;
       border-radius:14px;
@@ -502,72 +538,11 @@
       font-weight:900;
     }
 
-    /* Modal */
-    .modal{
-      position:fixed;
-      inset:0;
-      display:none;
-      align-items:center;
-      justify-content:center;
-      padding:18px;
-      z-index:1000;
-      background:rgba(0,0,0,.55);
-      backdrop-filter: blur(10px);
-    }
-    .modal.show{display:flex;}
-    .modalBox{
-      width:100%;
-      max-width:420px;
-      border-radius:20px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(10,16,32,.95);
-      box-shadow:0 25px 70px rgba(0,0,0,.45);
-      overflow:hidden;
-    }
-    .modalTop{
-      padding:14px 16px;
-      display:flex;
-      justify-content:space-between;
-      gap:12px;
-      border-bottom:1px solid rgba(255,255,255,.10);
-    }
-    .closeBtn{
-      border:none;
-      cursor:pointer;
-      width:38px;
-      height:38px;
-      border-radius:12px;
-      background:rgba(255,255,255,.06);
-      color:white;
-      border:1px solid rgba(255,255,255,.12);
-      font-size:16px;
-      font-weight:900;
-    }
-    .form{padding:16px;}
-    .form label{
-      display:block;
-      margin:10px 0 6px;
-      font-size:13px;
-      font-weight:900;
-      color:rgba(255,255,255,.88);
-    }
-    .form input, .form select{
-      width:100%;
-      padding:12px 12px;
-      border-radius:14px;
-      outline:none;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.06);
-      color:white;
-      font-size:14px;
-    }
-    .form input::placeholder{color:rgba(255,255,255,.45);}
-
     /* Floating WhatsApp */
     .waFloat{
       position:fixed;
       right:16px;
-      bottom:92px; /* above fixed bar */
+      bottom:92px;
       width:56px;
       height:56px;
       display:flex;
@@ -630,16 +605,20 @@
       position:relative;
       z-index:1;
       font-weight:900;
-      font-size:14px;
+      font-size:18px;
       color:white;
+      letter-spacing:.3px;
+      text-transform:uppercase;
       animation: dlBlink 1s linear infinite;
     }
     @keyframes dlBlink{
       0%,100%{opacity:1;}
       50%{opacity:.5;}
     }
-    .dlMsg b{color:var(--warn);}
-
+    .dlMsg b{
+      color:var(--warn);
+      font-size:20px;
+    }
     .dlBtns{
       position:relative;
       z-index:1;
@@ -673,7 +652,8 @@
 
     @media(max-width:420px){
       .dlFixedBar{left:10px; right:10px; bottom:10px; padding:10px;}
-      .dlMsg{font-size:13px;}
+      .dlMsg{font-size:15px;}
+      .dlMsg b{font-size:16px;}
       .dlBtn{min-width:82px;padding:9px 10px;font-size:12px;}
     }
   </style>
@@ -703,7 +683,10 @@
         Safe • Confident • Road Ready
       </div>
 
-      <h1>Learn Driving Like a Pro 🚗<br/>With Abhinaash A One</h1>
+      <div class="heroTitle">
+        <span class="shine">Learn Driving Like a Pro</span>
+        <span class="typingLine">with Abhinaash A One Driving Classes</span>
+      </div>
 
       <p>
         Professional driving training with modern learning style.
@@ -774,31 +757,6 @@
     </div>
   </section>
 
-  <!-- BATCH TIMING -->
-  <section id="batches" style="margin-top:28px;">
-    <div class="feature" style="border-radius:20px;">
-      <h4 style="font-size:18px;">🕒 Batches Timing</h4>
-      <p style="margin-top:6px;color:rgba(255,255,255,.7);font-size:14px;">
-        Choose your preferred batch and start learning with confidence.
-      </p>
-
-      <div class="batchGrid" style="margin-top:16px;">
-        <div class="batchCard animateBatch">
-          <div class="batchIcon">🌅</div>
-          <h3>Morning</h3>
-          <p>7:00 AM – 8:00 AM</p>
-          <p>8:00 AM – 9:00 AM</p>
-        </div>
-
-        <div class="batchCard animateBatch delay1">
-          <div class="batchIcon">🌇</div>
-          <h3>Evening</h3>
-          <p>3:00 PM – 4:00 PM</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- SLOT BOOKING -->
   <section id="slots" style="margin-top:28px;">
     <div class="slotWrap">
@@ -828,64 +786,6 @@
     </div>
   </section>
 
-  <!-- STUDENTS -->
-  <section id="students" style="margin-top:28px;">
-    <div class="feature" style="border-radius:20px;">
-      <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center;">
-        <div>
-          <h4 style="font-size:18px;">👨‍🎓 Our Students</h4>
-          <p style="margin-top:6px;color:rgba(255,255,255,.7);font-size:14px;">
-            Real learners from Abhinaash A One Driving Classes.
-          </p>
-        </div>
-
-        <button class="btn btnGhost" onclick="toggleBlur()" id="blurBtn"
-          style="border:1px solid rgba(255,255,255,.16);">
-          Blur: ON
-        </button>
-      </div>
-
-      <div class="studentGrid" style="margin-top:16px;">
-        <div class="studentCard blurOn">
-          <img src="assets/student1.jpg" alt="Student 1">
-          <div class="studentName">Student</div>
-        </div>
-        <div class="studentCard blurOn">
-          <img src="assets/student2.jpg" alt="Student 2">
-          <div class="studentName">Student</div>
-        </div>
-        <div class="studentCard blurOn">
-          <img src="assets/student3.jpg" alt="Student 3">
-          <div class="studentName">Student</div>
-        </div>
-        <div class="studentCard blurOn">
-          <img src="assets/student4.jpg" alt="Student 4">
-          <div class="studentName">Student</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CONTACT -->
-  <section class="section" id="contact" style="margin-top:28px;">
-    <div class="feature" style="grid-column:1/-1;">
-      <h4 style="font-size:18px;">📞 Contact Abhinaash A One Driving Classes</h4>
-      <p style="margin-top:6px;color:rgba(255,255,255,.7);font-size:14px;">
-        Call / WhatsApp anytime for admission & class timings.
-      </p>
-
-      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:14px;">
-        <a href="tel:+917008186187" class="btn btnPrimary" style="text-decoration:none;display:inline-block;">
-          Call Now: 7008186187
-        </a>
-        <a href="https://wa.me/917008186187" target="_blank" class="btn btnGhost"
-           style="text-decoration:none;display:inline-block;border:1px solid rgba(255,255,255,.18);">
-          WhatsApp: 7008186187
-        </a>
-      </div>
-    </div>
-  </section>
-
   <footer>
     © <span id="year"></span> Abhinaash A One Driving Classes • Made with ❤️
   </footer>
@@ -905,46 +805,9 @@
   </div>
 </div>
 
-<!-- Admission Popup -->
-<div class="modal" id="admissionModal">
-  <div class="modalBox">
-    <div class="modalTop">
-      <div>
-        <h3 style="font-size:18px;">📝 Admission Form</h3>
-        <p style="color:rgba(255,255,255,.65);font-size:13px;margin-top:4px;">
-          Fill your details, we will contact you soon.
-        </p>
-      </div>
-      <button class="closeBtn" onclick="closeAdmission()">✕</button>
-    </div>
-
-    <form onsubmit="submitAdmission(event)" class="form">
-      <label>Full Name</label>
-      <input type="text" id="sName" placeholder="Enter your name" required>
-
-      <label>Phone Number</label>
-      <input type="tel" id="sPhone" placeholder="10 digit mobile number" required>
-
-      <label>Class Type</label>
-      <select id="sClass" required>
-        <option value="">Select</option>
-        <option value="Group - 30 Classes (₹4500)">Group - 30 Classes (₹4500)</option>
-        <option value="Personal - 30 Classes (₹8000)">Personal - 30 Classes (₹8000)</option>
-      </select>
-
-      <button type="submit" class="btn btnPrimary" style="width:100%;margin-top:10px;">
-        Submit
-      </button>
-    </form>
-  </div>
-</div>
-
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
-  import {
-    getFirestore, collection, doc, setDoc, getDoc,
-    onSnapshot, serverTimestamp
-  } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
+  import { getFirestore, collection, doc, setDoc, getDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyC3gWi8p85z-wkoJeWbN3jYoQpcIar8Sww",
@@ -977,121 +840,18 @@
   document.getElementById("visitorBox").innerText = "Visitor ID: " + vid;
   document.getElementById("year").innerText = new Date().getFullYear();
 
-  window.copyVisitorId = function(){
-    navigator.clipboard.writeText(vid);
-    alert("Visitor ID copied: " + vid);
-  };
-
-  window.scrollToPricing = ()=> document.getElementById("pricing").scrollIntoView({behavior:"smooth"});
-  window.scrollToContact = ()=> document.getElementById("contact").scrollIntoView({behavior:"smooth"});
-  window.scrollToSlots = ()=> document.getElementById("slots").scrollIntoView({behavior:"smooth"});
-
-  /* Slider */
-  let currentSlide = 0;
-  let slideInterval;
-
-  function initSlider(){
-    const slides = document.querySelectorAll("#carSlider .slide");
-    const dotsBox = document.getElementById("dots");
-    dotsBox.innerHTML = "";
-
-    slides.forEach((_, i)=>{
-      const b = document.createElement("button");
-      b.className = "dotBtn" + (i===0 ? " active" : "");
-      b.onclick = ()=> goToSlide(i);
-      dotsBox.appendChild(b);
-    });
-
-    slideInterval = setInterval(()=> nextSlide(), 3500);
-  }
-
-  function goToSlide(i){
-    const slides = document.querySelectorAll("#carSlider .slide");
-    const dots = document.querySelectorAll("#dots .dotBtn");
-    slides[currentSlide].classList.remove("active");
-    dots[currentSlide].classList.remove("active");
-    currentSlide = i;
-    slides[currentSlide].classList.add("active");
-    dots[currentSlide].classList.add("active");
-    clearInterval(slideInterval);
-    slideInterval = setInterval(()=> nextSlide(), 3500);
-  }
-
-  function nextSlide(){
-    const slides = document.querySelectorAll("#carSlider .slide");
-    goToSlide((currentSlide + 1) % slides.length);
-  }
-  function prevSlide(){
-    const slides = document.querySelectorAll("#carSlider .slide");
-    goToSlide((currentSlide - 1 + slides.length) % slides.length);
-  }
-
-  window.nextSlide = nextSlide;
-  window.prevSlide = prevSlide;
-
-  /* Batch animation */
-  function revealBatches(){
-    const items = document.querySelectorAll(".animateBatch");
-    const trigger = window.innerHeight * 0.86;
-    items.forEach(el=>{
-      if(el.getBoundingClientRect().top < trigger) el.classList.add("show");
-    });
-  }
-  window.addEventListener("scroll", revealBatches);
-
-  /* Students blur toggle */
-  let blurEnabled = true;
-  window.toggleBlur = function(){
-    blurEnabled = !blurEnabled;
-    document.querySelectorAll(".studentCard").forEach(card=>{
-      if(blurEnabled) card.classList.add("blurOn");
-      else card.classList.remove("blurOn");
-    });
-    document.getElementById("blurBtn").innerText = "Blur: " + (blurEnabled ? "ON" : "OFF");
-  };
-
-  /* Admission popup */
-  window.openAdmission = ()=> document.getElementById("admissionModal").classList.add("show");
-  window.closeAdmission = ()=> document.getElementById("admissionModal").classList.remove("show");
-  document.addEventListener("click",(e)=>{
-    const modal = document.getElementById("admissionModal");
-    if(modal.classList.contains("show") && e.target === modal) window.closeAdmission();
-  });
-
-  window.submitAdmission = function(e){
-    e.preventDefault();
-    const name = document.getElementById("sName").value.trim();
-    const phone = document.getElementById("sPhone").value.trim();
-    const classType = document.getElementById("sClass").value;
-
-    if(phone.length < 10) return alert("Please enter valid phone number");
-
-    const msg =
-      `Admission Request%0A%0A`+
-      `Name: ${encodeURIComponent(name)}%0A`+
-      `Phone: ${encodeURIComponent(phone)}%0A`+
-      `Class: ${encodeURIComponent(classType)}%0A`+
-      `Visitor ID: ${encodeURIComponent(vid)}`;
-
-    window.open(`https://wa.me/917008186187?text=${msg}`, "_blank");
-    window.closeAdmission();
-    document.querySelector(".form").reset();
-  };
-
-  /* Slot booking */
+  // Slot booking realtime
   const SLOT_DATA = [
     { id:"M7_8", label:"Morning 7–8", time:"7:00 AM – 8:00 AM", total:4 },
     { id:"M8_9", label:"Morning 8–9", time:"8:00 AM – 9:00 AM", total:4 },
     { id:"E3_4", label:"Evening 3–4", time:"3:00 PM – 4:00 PM", total:4 }
   ];
 
-  function seatLabel(seatNo){ return `A${seatNo}`; }
-
+  function seatLabel(n){ return `A${n}`; }
   const slotCollection = collection(db, "slotBookings");
-
+  let BOOKED_MAP = {};
   let selectedSlot = null;
   let selectedSeat = null;
-  let BOOKED_MAP = {}; // slotId_seat -> data
 
   function seatDocId(slotId, seat){ return `${slotId}_${seat}`; }
   function isSeatBooked(slotId, seat){ return !!BOOKED_MAP[seatDocId(slotId, seat)]; }
@@ -1177,8 +937,7 @@
   window.confirmSlotBooking = async function(){
     const already = findVisitorBooking(vid);
     if(already){
-      const slotLabelTxt = SLOT_DATA.find(s=>s.id===already.slotId)?.label || already.slotId;
-      alert(`You already booked ✅\n\nSlot: ${slotLabelTxt}\nSeat: ${seatLabel(already.seat)}`);
+      alert("You already booked ✅ (Only 1 booking per user)");
       return;
     }
 
@@ -1230,10 +989,17 @@
   }
 
   window.addEventListener("load", ()=>{
-    initSlider();
-    revealBatches();
     startRealtimeListener();
+    revealBatches();
   });
+
+  function revealBatches(){
+    const items = document.querySelectorAll(".animateBatch");
+    const trigger = window.innerHeight * 0.86;
+    items.forEach(el=>{
+      if(el.getBoundingClientRect().top < trigger) el.classList.add("show");
+    });
+  }
 </script>
 </body>
 </html>
