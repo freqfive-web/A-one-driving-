@@ -656,6 +656,79 @@
       .dlMsg b{font-size:16px;}
       .dlBtn{min-width:82px;padding:9px 10px;font-size:12px;}
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    /* Modal popup */
+.modal{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+  z-index:1000;
+  background:rgba(0,0,0,.55);
+  backdrop-filter: blur(10px);
+}
+.modal.show{display:flex;}
+
+.modalBox{
+  width:100%;
+  max-width:420px;
+  border-radius:20px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(10,16,32,.95);
+  box-shadow:0 25px 70px rgba(0,0,0,.45);
+  overflow:hidden;
+}
+.modalTop{
+  padding:14px 16px;
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  border-bottom:1px solid rgba(255,255,255,.10);
+}
+.closeBtn{
+  border:none;
+  cursor:pointer;
+  width:38px;
+  height:38px;
+  border-radius:12px;
+  background:rgba(255,255,255,.06);
+  color:white;
+  border:1px solid rgba(255,255,255,.12);
+  font-size:16px;
+}
+.closeBtn:hover{background:rgba(255,255,255,.10);}
+
+.form{
+  padding:16px;
+}
+.form label{
+  display:block;
+  margin:10px 0 6px;
+  font-size:13px;
+  font-weight:700;
+  color:rgba(255,255,255,.85);
+}
+.form input, .form select{
+  width:100%;
+  padding:12px 12px;
+  border-radius:14px;
+  outline:none;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.06);
+  color:white;
+  font-size:14px;
+}
+.form input::placeholder{color:rgba(255,255,255,.45);}
   </style>
 </head>
 
@@ -1033,6 +1106,96 @@
   function scrollToContact(){
   document.getElementById("contact").scrollIntoView({behavior:"smooth"});
 }
+
+
+
+
+
+
+
+
+
+
+// Admission popup
+function openAdmission(){
+  document.getElementById("admissionModal").classList.add("show");
+}
+function closeAdmission(){
+  document.getElementById("admissionModal").classList.remove("show");
+}
+
+// Close modal on outside click
+document.addEventListener("click",(e)=>{
+  const modal = document.getElementById("admissionModal");
+  if(modal.classList.contains("show") && e.target === modal){
+    closeAdmission();
+  }
+});
+
+function submitAdmission(e){
+  e.preventDefault();
+
+  const name = document.getElementById("sName").value.trim();
+  const phone = document.getElementById("sPhone").value.trim();
+  const classType = document.getElementById("sClass").value;
+
+  if(phone.length < 10){
+    alert("Please enter valid phone number");
+    return;
+  }
+
+  const visitorId = localStorage.getItem("ABO_VISITOR_ID") || "UNKNOWN";
+
+  // WhatsApp message to you (owner)
+  const msg = `Admission Request%0A%0AName: ${encodeURIComponent(name)}%0APhone: ${encodeURIComponent(phone)}%0AClass: ${encodeURIComponent(classType)}%0AVisitor ID: ${encodeURIComponent(visitorId)}`;
+
+  window.open(`https://wa.me/917008186187?text=${msg}`, "_blank");
+
+  closeAdmission();
+  document.querySelector(".form").reset();
+}
 </script>
+
+
+
+
+
+<!-- Admission Popup -->
+<div class="modal" id="admissionModal">
+  <div class="modalBox">
+    <div class="modalTop">
+      <div>
+        <h3 style="font-size:18px;">📝 Admission Form</h3>
+        <p style="color:rgba(255,255,255,.65);font-size:13px;margin-top:4px;">
+          Fill your details, we will contact you soon.
+        </p>
+      </div>
+      <button class="closeBtn" onclick="closeAdmission()">✕</button>
+    </div>
+
+    <form onsubmit="submitAdmission(event)" class="form">
+      <label>Full Name</label>
+      <input type="text" id="sName" placeholder="Enter your name" required>
+
+      <label>Phone Number</label>
+      <input type="tel" id="sPhone" placeholder="10 digit mobile number" required>
+
+      <label>Class Type</label>
+      <select id="sClass" required>
+        <option value="">Select</option>
+        <option value="Group - 30 Classes (₹4500)">Group - 30 Classes (₹4500)</option>
+        <option value="Personal - 30 Classes (₹8000)">Personal - 30 Classes (₹8000)</option>
+      </select>
+
+      <button type="submit" class="btn btnPrimary" style="width:100%;margin-top:10px;">
+        Submit
+      </button>
+
+      <p style="margin-top:10px;color:rgba(255,255,255,.55);font-size:12px;line-height:1.6;">
+        By submitting, you agree to be contacted by Abhinaash A One Driving Classes.
+      </p>
+    </form>
+  </div>
+</div>
 </body>
 </html>
