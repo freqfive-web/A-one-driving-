@@ -32,6 +32,7 @@
                   radial-gradient(900px 500px at 80% 40%, rgba(0,255,136,.10), transparent 60%),
                   linear-gradient(180deg,var(--bg1),var(--bg2));
       overflow-x:hidden;
+      padding-bottom:90px; /* important because fixed bar */
     }
 
     header{
@@ -175,7 +176,7 @@
     .btnGhost:hover{background:rgba(255,255,255,.10);}
 
     @media(max-width:520px){
-      .ctaRow .btn{flex:1 1 48%;} /* 2 buttons per row on mobile */
+      .ctaRow .btn{flex:1 1 48%;}
     }
 
     /* Pricing cards */
@@ -412,7 +413,6 @@
       background:rgba(255,77,77,.10);
     }
 
-    /* BMS seat grid look */
     .seatGrid{
       display:grid;
       grid-template-columns:repeat(4,1fr);
@@ -420,30 +420,39 @@
       margin-top:12px;
     }
 
+    /* Available seat: green */
     .seat{
       min-height:42px;
       border-radius:14px;
       border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.06);
+      background:#14c45a;
       cursor:pointer;
       font-weight:900;
-      color:rgba(255,255,255,.90);
+      color:#ffffff;
       transition:.15s ease;
       font-size:14px;
       letter-spacing:.2px;
     }
     .seat:hover{transform:translateY(-2px);}
+
+    /* Selected: blue glow */
     .seat.selected{
-      background:rgba(0,212,255,.22);
-      border-color:rgba(0,212,255,.35);
-      color:white;
-      box-shadow:0 0 18px rgba(0,212,255,.15);
+      background:#00d4ff;
+      border-color:rgba(0,212,255,.55);
+      color:#041018;
+      box-shadow:0 0 22px rgba(0,212,255,.45),
+                 0 0 50px rgba(0,212,255,.18);
+      transform:scale(1.03);
     }
+
+    /* Booked: red with black text */
     .seat.booked{
-      background:rgba(255,255,255,.08);
-      opacity:.45;
+      background:#ff3b3b;
+      color:#000000;
+      border-color:rgba(255,77,77,.60);
+      opacity:1;
       cursor:not-allowed;
-      text-decoration:line-through;
+      text-decoration:none;
     }
 
     .slotFooter{
@@ -558,7 +567,7 @@
     .waFloat{
       position:fixed;
       right:16px;
-      bottom:16px;
+      bottom:92px; /* above fixed bar */
       width:56px;
       height:56px;
       display:flex;
@@ -584,6 +593,88 @@
       color:rgba(255,255,255,.55);
       font-size:13px;
       text-align:center;
+    }
+
+    /* Fixed DL/LL bottom bar */
+    .dlFixedBar{
+      position:fixed;
+      left:12px;
+      right:12px;
+      bottom:12px;
+      z-index:998;
+      border-radius:18px;
+      padding:12px 12px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      background:rgba(0,0,0,.45);
+      border:1px solid rgba(255,255,255,.14);
+      backdrop-filter: blur(12px);
+      overflow:hidden;
+    }
+    .dlFixedBar::before{
+      content:"";
+      position:absolute;
+      inset:-100px;
+      background: radial-gradient(circle at 20% 20%, rgba(0,212,255,.24), transparent 55%),
+                  radial-gradient(circle at 85% 80%, rgba(0,255,136,.18), transparent 55%);
+      filter: blur(22px);
+      animation: dlGlow 1.2s ease-in-out infinite;
+    }
+    @keyframes dlGlow{
+      0%,100%{opacity:.35; transform:scale(1);}
+      50%{opacity:1; transform:scale(1.12);}
+    }
+    .dlMsg{
+      position:relative;
+      z-index:1;
+      font-weight:900;
+      font-size:14px;
+      color:white;
+      animation: dlBlink 1s linear infinite;
+    }
+    @keyframes dlBlink{
+      0%,100%{opacity:1;}
+      50%{opacity:.5;}
+    }
+    .dlMsg b{color:var(--warn);}
+
+    .dlBtns{
+      position:relative;
+      z-index:1;
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+    .dlBtn{
+      text-decoration:none;
+      font-weight:900;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.14);
+      color:white;
+      font-size:13px;
+      min-width:92px;
+      text-align:center;
+      transition:.2s ease;
+      white-space:nowrap;
+    }
+    .dlBtn.call{
+      background:linear-gradient(45deg,var(--accent),var(--accent2));
+      color:#041018;
+    }
+    .dlBtn.wa{
+      background:rgba(255,255,255,.10);
+    }
+    .dlBtn:hover{
+      transform:translateY(-2px) scale(1.02);
+    }
+
+    @media(max-width:420px){
+      .dlFixedBar{left:10px; right:10px; bottom:10px; padding:10px;}
+      .dlMsg{font-size:13px;}
+      .dlBtn{min-width:82px;padding:9px 10px;font-size:12px;}
     }
   </style>
 </head>
@@ -664,10 +755,6 @@
         <button class="navBtn next" onclick="nextSlide()">❯</button>
         <div class="dots" id="dots"></div>
       </div>
-
-      <p style="margin-top:12px;color:rgba(255,255,255,.65);font-size:12px;line-height:1.6;">
-        Tip: Book your slot fast! Limited seats per batch.
-      </p>
     </div>
   </section>
 
@@ -720,10 +807,7 @@
           <h4 style="font-size:18px;">🎟️ Book Your Slot</h4>
           <p>Select your seat like BookMyShow (4 seats per batch).</p>
         </div>
-
-        <div style="display:flex;gap:10px;flex-wrap:wrap;">
-          <button class="btn btnPrimary" onclick="confirmSlotBooking()">Confirm Booking</button>
-        </div>
+        <button class="btn btnPrimary" onclick="confirmSlotBooking()">Confirm Booking</button>
       </div>
 
       <div class="slotGrid" id="slotGrid"></div>
@@ -779,10 +863,6 @@
           <div class="studentName">Student</div>
         </div>
       </div>
-
-      <p style="margin-top:12px;color:rgba(255,255,255,.6);font-size:12px;">
-        Note: Blur ON by default for privacy.
-      </p>
     </div>
   </section>
 
@@ -798,7 +878,6 @@
         <a href="tel:+917008186187" class="btn btnPrimary" style="text-decoration:none;display:inline-block;">
           Call Now: 7008186187
         </a>
-
         <a href="https://wa.me/917008186187" target="_blank" class="btn btnGhost"
            style="text-decoration:none;display:inline-block;border:1px solid rgba(255,255,255,.18);">
           WhatsApp: 7008186187
@@ -814,6 +893,17 @@
 
 <!-- Floating WhatsApp -->
 <a href="https://wa.me/917008186187" target="_blank" class="waFloat" aria-label="WhatsApp">💬</a>
+
+<!-- Fixed Bottom DL/LL Bar -->
+<div class="dlFixedBar">
+  <div class="dlMsg">
+    ⚡ Contact us for <b>DL</b> & <b>LL</b>
+  </div>
+  <div class="dlBtns">
+    <a href="tel:+917008186187" class="dlBtn call">📞 Call</a>
+    <a href="https://wa.me/917008186187" target="_blank" class="dlBtn wa">💬 WhatsApp</a>
+  </div>
+</div>
 
 <!-- Admission Popup -->
 <div class="modal" id="admissionModal">
@@ -845,32 +935,17 @@
       <button type="submit" class="btn btnPrimary" style="width:100%;margin-top:10px;">
         Submit
       </button>
-
-      <p style="margin-top:10px;color:rgba(255,255,255,.55);font-size:12px;line-height:1.6;">
-        By submitting, you agree to be contacted by Abhinaash A One Driving Classes.
-      </p>
     </form>
   </div>
 </div>
 
 <script type="module">
-  // ==========================
-  // Firebase imports
-  // ==========================
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
   import {
-    getFirestore,
-    collection,
-    doc,
-    setDoc,
-    getDoc,
-    onSnapshot,
-    serverTimestamp
+    getFirestore, collection, doc, setDoc, getDoc,
+    onSnapshot, serverTimestamp
   } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
 
-  // ==========================
-  // Firebase config (yours)
-  // ==========================
   const firebaseConfig = {
     apiKey: "AIzaSyC3gWi8p85z-wkoJeWbN3jYoQpcIar8Sww",
     authDomain: "abinash-driving.firebaseapp.com",
@@ -884,9 +959,6 @@
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
-  // ==========================
-  // Visitor ID
-  // ==========================
   function generateVisitorId() {
     const random = Math.random().toString(16).slice(2, 10).toUpperCase();
     const year = new Date().getFullYear();
@@ -897,31 +969,24 @@
     if (!vid) {
       vid = generateVisitorId();
       localStorage.setItem("ABO_VISITOR_ID", vid);
-      localStorage.setItem("ABO_FIRST_VISIT", new Date().toISOString());
     }
     return vid;
   }
-
-  window.copyVisitorId = function(){
-    const vid = localStorage.getItem("ABO_VISITOR_ID") || "";
-    navigator.clipboard.writeText(vid);
-    alert("Visitor ID copied: " + vid);
-  };
 
   const vid = getOrCreateVisitorId();
   document.getElementById("visitorBox").innerText = "Visitor ID: " + vid;
   document.getElementById("year").innerText = new Date().getFullYear();
 
-  // ==========================
-  // Scroll
-  // ==========================
+  window.copyVisitorId = function(){
+    navigator.clipboard.writeText(vid);
+    alert("Visitor ID copied: " + vid);
+  };
+
   window.scrollToPricing = ()=> document.getElementById("pricing").scrollIntoView({behavior:"smooth"});
   window.scrollToContact = ()=> document.getElementById("contact").scrollIntoView({behavior:"smooth"});
   window.scrollToSlots = ()=> document.getElementById("slots").scrollIntoView({behavior:"smooth"});
 
-  // ==========================
-  // Slider
-  // ==========================
+  /* Slider */
   let currentSlide = 0;
   let slideInterval;
 
@@ -943,15 +1008,11 @@
   function goToSlide(i){
     const slides = document.querySelectorAll("#carSlider .slide");
     const dots = document.querySelectorAll("#dots .dotBtn");
-
     slides[currentSlide].classList.remove("active");
     dots[currentSlide].classList.remove("active");
-
     currentSlide = i;
-
     slides[currentSlide].classList.add("active");
     dots[currentSlide].classList.add("active");
-
     clearInterval(slideInterval);
     slideInterval = setInterval(()=> nextSlide(), 3500);
   }
@@ -968,44 +1029,33 @@
   window.nextSlide = nextSlide;
   window.prevSlide = prevSlide;
 
-  // ==========================
-  // Batch animation
-  // ==========================
+  /* Batch animation */
   function revealBatches(){
     const items = document.querySelectorAll(".animateBatch");
     const trigger = window.innerHeight * 0.86;
     items.forEach(el=>{
-      const top = el.getBoundingClientRect().top;
-      if(top < trigger) el.classList.add("show");
+      if(el.getBoundingClientRect().top < trigger) el.classList.add("show");
     });
   }
   window.addEventListener("scroll", revealBatches);
 
-  // ==========================
-  // Students blur toggle
-  // ==========================
+  /* Students blur toggle */
   let blurEnabled = true;
   window.toggleBlur = function(){
     blurEnabled = !blurEnabled;
-    const cards = document.querySelectorAll(".studentCard");
-    cards.forEach(card=>{
+    document.querySelectorAll(".studentCard").forEach(card=>{
       if(blurEnabled) card.classList.add("blurOn");
       else card.classList.remove("blurOn");
     });
     document.getElementById("blurBtn").innerText = "Blur: " + (blurEnabled ? "ON" : "OFF");
   };
 
-  // ==========================
-  // Admission popup
-  // ==========================
+  /* Admission popup */
   window.openAdmission = ()=> document.getElementById("admissionModal").classList.add("show");
   window.closeAdmission = ()=> document.getElementById("admissionModal").classList.remove("show");
-
   document.addEventListener("click",(e)=>{
     const modal = document.getElementById("admissionModal");
-    if(modal.classList.contains("show") && e.target === modal){
-      window.closeAdmission();
-    }
+    if(modal.classList.contains("show") && e.target === modal) window.closeAdmission();
   });
 
   window.submitAdmission = function(e){
@@ -1014,10 +1064,7 @@
     const phone = document.getElementById("sPhone").value.trim();
     const classType = document.getElementById("sClass").value;
 
-    if(phone.length < 10){
-      alert("Please enter valid phone number");
-      return;
-    }
+    if(phone.length < 10) return alert("Please enter valid phone number");
 
     const msg =
       `Admission Request%0A%0A`+
@@ -1031,49 +1078,33 @@
     document.querySelector(".form").reset();
   };
 
-  // ==========================
-  // SLOT BOOKING (Realtime Firebase)
-  // ==========================
+  /* Slot booking */
   const SLOT_DATA = [
     { id:"M7_8", label:"Morning 7–8", time:"7:00 AM – 8:00 AM", total:4 },
     { id:"M8_9", label:"Morning 8–9", time:"8:00 AM – 9:00 AM", total:4 },
     { id:"E3_4", label:"Evening 3–4", time:"3:00 PM – 4:00 PM", total:4 }
   ];
 
-  // BookMyShow seat labels (A1-A4)
-  function seatLabel(seatNo){
-    return `A${seatNo}`;
-  }
+  function seatLabel(seatNo){ return `A${seatNo}`; }
 
   const slotCollection = collection(db, "slotBookings");
 
   let selectedSlot = null;
   let selectedSeat = null;
+  let BOOKED_MAP = {}; // slotId_seat -> data
 
-  // key format: slotId_seat
-  let BOOKED_MAP = {};
-
-  function seatDocId(slotId, seat){
-    return `${slotId}_${seat}`;
-  }
-
-  function isSeatBooked(slotId, seat){
-    return !!BOOKED_MAP[seatDocId(slotId, seat)];
-  }
+  function seatDocId(slotId, seat){ return `${slotId}_${seat}`; }
+  function isSeatBooked(slotId, seat){ return !!BOOKED_MAP[seatDocId(slotId, seat)]; }
 
   function countBooked(slotId){
-    let c = 0;
-    for(let i=1;i<=4;i++){
-      if(isSeatBooked(slotId,i)) c++;
-    }
+    let c=0;
+    for(let i=1;i<=4;i++){ if(isSeatBooked(slotId,i)) c++; }
     return c;
   }
 
   function findVisitorBooking(visitorId){
     for(const key of Object.keys(BOOKED_MAP)){
-      if(BOOKED_MAP[key]?.visitorId === visitorId){
-        return BOOKED_MAP[key];
-      }
+      if(BOOKED_MAP[key]?.visitorId === visitorId) return BOOKED_MAP[key];
     }
     return null;
   }
@@ -1094,11 +1125,9 @@
       for(let i=1;i<=slot.total;i++){
         const booked = isSeatBooked(slot.id, i);
         const selected = (selectedSlot === slot.id && selectedSeat === i);
-
         seatsHTML += `
           <button class="seat ${booked ? "booked" : ""} ${selected ? "selected" : ""}"
-            onclick="selectSeat('${slot.id}', ${i})"
-            ${booked ? "disabled" : ""}>
+            onclick="selectSeat('${slot.id}', ${i})" ${booked ? "disabled" : ""}>
             ${seatLabel(i)}
           </button>
         `;
@@ -1111,18 +1140,12 @@
           <div>${slot.label}</div>
           ${availabilityPill}
         </div>
-
         <div style="color:rgba(255,255,255,.65);font-size:13px;">${slot.time}</div>
-
         <div style="margin-top:6px;color:rgba(255,255,255,.70);font-size:13px;">
           Remaining seats: <b>${availableCount}/${slot.total}</b>
         </div>
-
-        <div class="seatGrid">
-          ${seatsHTML}
-        </div>
+        <div class="seatGrid">${seatsHTML}</div>
       `;
-
       grid.appendChild(card);
     });
 
@@ -1137,9 +1160,8 @@
 
   function updateSelectedInfo(){
     const info = document.getElementById("selectedInfo");
-    if(!selectedSlot || !selectedSeat){
-      info.innerText = "None";
-    } else {
+    if(!selectedSlot || !selectedSeat) info.innerText = "None";
+    else {
       const slotLabelTxt = SLOT_DATA.find(s=>s.id===selectedSlot)?.label || selectedSlot;
       info.innerText = `${slotLabelTxt} • Seat ${seatLabel(selectedSeat)}`;
     }
@@ -1149,17 +1171,14 @@
     if(existing){
       const slotLabelTxt = SLOT_DATA.find(s=>s.id===existing.slotId)?.label || existing.slotId;
       my.innerText = `${slotLabelTxt} • Seat ${seatLabel(existing.seat)}`;
-    } else {
-      my.innerText = "Not booked";
-    }
+    } else my.innerText = "Not booked";
   }
 
   window.confirmSlotBooking = async function(){
-    // 1 booking per visitor
     const already = findVisitorBooking(vid);
     if(already){
       const slotLabelTxt = SLOT_DATA.find(s=>s.id===already.slotId)?.label || already.slotId;
-      alert(`You already booked ✅\n\nSlot: ${slotLabelTxt}\nSeat: ${seatLabel(already.seat)}\n\nOnly 1 booking allowed per Visitor ID.`);
+      alert(`You already booked ✅\n\nSlot: ${slotLabelTxt}\nSeat: ${seatLabel(already.seat)}`);
       return;
     }
 
@@ -1168,14 +1187,11 @@
       return;
     }
 
-    // realtime check
     if(isSeatBooked(selectedSlot, selectedSeat)){
       alert("Seat already booked. Please choose another.");
-      renderSlots();
       return;
     }
 
-    // collision safe check
     const docRef = doc(db, "slotBookings", seatDocId(selectedSlot, selectedSeat));
     const snap = await getDoc(docRef);
     if(snap.exists()){
@@ -1191,17 +1207,13 @@
     });
 
     const slotLabelTxt = SLOT_DATA.find(s=>s.id===selectedSlot)?.label || selectedSlot;
-
-    // WhatsApp message to owner
     const msg =
       `Slot Booking Confirm%0A%0A`+
       `Slot: ${encodeURIComponent(slotLabelTxt)}%0A`+
       `Seat: ${encodeURIComponent(seatLabel(selectedSeat))}%0A`+
-      `Visitor ID: ${encodeURIComponent(vid)}%0A`+
-      `Time: ${encodeURIComponent(new Date().toLocaleString())}`;
+      `Visitor ID: ${encodeURIComponent(vid)}`;
 
     window.open(`https://wa.me/917008186187?text=${msg}`, "_blank");
-
     alert("Seat booked successfully ✅");
 
     selectedSlot = null;
@@ -1209,20 +1221,14 @@
     renderSlots();
   };
 
-  // realtime listener
   function startRealtimeListener(){
     onSnapshot(slotCollection, (snapshot)=>{
       BOOKED_MAP = {};
-      snapshot.forEach((d)=>{
-        BOOKED_MAP[d.id] = d.data();
-      });
+      snapshot.forEach((d)=>{ BOOKED_MAP[d.id] = d.data(); });
       renderSlots();
     });
   }
 
-  // ==========================
-  // INIT
-  // ==========================
   window.addEventListener("load", ()=>{
     initSlider();
     revealBatches();
