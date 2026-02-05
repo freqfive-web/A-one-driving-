@@ -1116,45 +1116,7 @@
 
 
 
-// Admission popup
-function openAdmission(){
-  document.getElementById("admissionModal").classList.add("show");
-}
-function closeAdmission(){
-  document.getElementById("admissionModal").classList.remove("show");
-}
 
-// Close modal on outside click
-document.addEventListener("click",(e)=>{
-  const modal = document.getElementById("admissionModal");
-  if(modal.classList.contains("show") && e.target === modal){
-    closeAdmission();
-  }
-});
-
-function submitAdmission(e){
-  e.preventDefault();
-
-  const name = document.getElementById("sName").value.trim();
-  const phone = document.getElementById("sPhone").value.trim();
-  const classType = document.getElementById("sClass").value;
-
-  if(phone.length < 10){
-    alert("Please enter valid phone number");
-    return;
-  }
-
-  const visitorId = localStorage.getItem("ABO_VISITOR_ID") || "UNKNOWN";
-
-  // WhatsApp message to you (owner)
-  const msg = `Admission Request%0A%0AName: ${encodeURIComponent(name)}%0APhone: ${encodeURIComponent(phone)}%0AClass: ${encodeURIComponent(classType)}%0AVisitor ID: ${encodeURIComponent(visitorId)}`;
-
-  window.open(`https://wa.me/917008186187?text=${msg}`, "_blank");
-
-  closeAdmission();
-  document.querySelector(".form").reset();
-}
-</script>
 
 
 
@@ -1197,5 +1159,18 @@ function submitAdmission(e){
     </form>
   </div>
 </div>
+
+
+
+
+<script>
+function openAdmission(){
+document.getElementById("admissionModal").classList.add("show");
+}
+
+function closeAdmission(){
+document.getElementById("admissionModal").classList.remove("show");
+}
+</script>
 </body>
 </html>
